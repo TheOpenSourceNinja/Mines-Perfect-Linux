@@ -30,60 +30,60 @@ namespace MinesPerfect {
 
 /* Probleme mit Konstanten in Headerfiles
 // stat.
-const string LOG_RAND_SEQ    = "rand_seq";
-const string LOG_BOARD_NR    = "board_nr";
-const string LOG_LEVEL       = "level";
-const string LOG_HEIGHT      = "height";
-const string LOG_WIDTH       = "width";
-const string LOG_DEEP        = "deep";
-const string LOG_NUM_MINES   = "num_mines";
-const string LOG_NUM_WHOLES  = "num_wholes";
+const wxString LOG_RAND_SEQ    = wxT("rand_seq";
+const wxString LOG_BOARD_NR    = wxT("board_nr";
+const wxString LOG_LEVEL       = wxT("level";
+const wxString LOG_HEIGHT      = wxT("height";
+const wxString LOG_WIDTH       = wxT("width";
+const wxString LOG_DEEP        = wxT("deep";
+const wxString LOG_NUM_MINES   = wxT("num_mines";
+const wxString LOG_NUM_WHOLES  = wxT("num_wholes";
 
 // stat. und dyn.
-const string LOG_MODUS       = "modus";
-const string LOG_MURPHYS_LAW = "murphys_law";
-const string LOG_AUTO_STAGE  = "auto_stage";
-const string LOG_MAX_STAGE   = "max_stage";
-const string LOG_SHOW_MINES  = "show_mines";
+const wxString LOG_MODUS       = wxT("modus";
+const wxString LOG_MURPHYS_LAW = wxT("murphys_law";
+const wxString LOG_AUTO_STAGE  = wxT("auto_stage";
+const wxString LOG_MAX_STAGE   = wxT("max_stage";
+const wxString LOG_SHOW_MINES  = wxT("show_mines";
 
 // dyn.
-const string LOG_FLAG        = "flag";
-const string LOG_OPEN        = "open";
-const string LOG_SOLVE_ONE   = "solve_one";
-const string LOG_SOLVE_ALL   = "solve_all";
-const string LOG_OUT_OF_TIME = "out_of_time";
+const wxString LOG_FLAG        = wxT("flag";
+const wxString LOG_OPEN        = wxT("open";
+const wxString LOG_SOLVE_ONE   = wxT("solve_one";
+const wxString LOG_SOLVE_ALL   = wxT("solve_all";
+const wxString LOG_OUT_OF_TIME = wxT("out_of_time";
 */
 
 // stat.
-#define LOG_VERSION      "version"
-#define LOG_VARIANT      "variant"
-#define LOG_RAND_SEQ     "rand_seq"
-#define LOG_BOARD_NAME   "board_name"
-#define LOG_BOARD_CHKSUM "board_chksum"
-#define LOG_LEVEL        "level"
-#define LOG_HEIGHT       "height"
-#define LOG_WIDTH        "width"
-#define LOG_DEEP         "deep"
-#define LOG_NUM_MINES    "num_mines"
-#define LOG_NUM_WHOLES   "num_wholes"
+#define LOG_VERSION      wxT("version")
+#define LOG_VARIANT      wxT("variant")
+#define LOG_RAND_SEQ     wxT("rand_seq")
+#define LOG_BOARD_NAME   wxT("board_name")
+#define LOG_BOARD_CHKSUM wxT("board_chksum")
+#define LOG_LEVEL        wxT("level")
+#define LOG_HEIGHT       wxT("height")
+#define LOG_WIDTH        wxT("width")
+#define LOG_DEEP         wxT("deep")
+#define LOG_NUM_MINES    wxT("num_mines")
+#define LOG_NUM_WHOLES   wxT("num_wholes")
 
 // stat. und dyn.
-#define LOG_MODUS       "modus"
-#define LOG_MURPHYS_LAW "murphys_law"
-#define LOG_AUTO_STAGE  "auto_stage"
-#define LOG_MAX_STAGE   "max_stage"
-#define LOG_SHOW_MINES  "show_mines"
+#define LOG_MODUS       wxT("modus")
+#define LOG_MURPHYS_LAW wxT("murphys_law")
+#define LOG_AUTO_STAGE  wxT("auto_stage")
+#define LOG_MAX_STAGE   wxT("max_stage")
+#define LOG_SHOW_MINES  wxT("show_mines")
 
 // dyn.
-#define LOG_FLAG        "flag"
-#define LOG_OPEN        "open"
-#define LOG_SOLVE_ONE   "solve_one"
-#define LOG_SOLVE_ALL   "solve_all"
-#define LOG_HINT        "hint"
-#define LOG_OUT_OF_TIME "out_of_time"
-#define LOG_START_TIMER "start_timer"
+#define LOG_FLAG        wxT("flag")
+#define LOG_OPEN        wxT("open")
+#define LOG_SOLVE_ONE   wxT("solve_one")
+#define LOG_SOLVE_ALL   wxT("solve_all")
+#define LOG_HINT        wxT("hint")
+#define LOG_OUT_OF_TIME wxT("out_of_time")
+#define LOG_START_TIMER wxT("start_timer")
 
-#define LOGS            "logs"
+#define LOGS            wxT("logs")
 
 //******************************************************************************
 class LogException : public Exception
@@ -91,7 +91,7 @@ class LogException : public Exception
 {
 public:
 
-   LogException (const std::string& t) : Exception (t) {}
+   LogException (const wxString& t) : Exception (t) {}
 };
 
 //******************************************************************************
@@ -99,17 +99,17 @@ struct Log
 //------------------------------------------------------------------------------
 {
   long         time1;
-  string       name;
+  wxString       name;
   int          val;  // muss mind. 32 Bit lang sein (rand_seq)
   bool         valid;
 
-  Log (void) : time1(0), name(""), val(0), valid(true) {;}
-  Log (string n, int v)
+  Log (void) : time1(0), name(wxT("")), val(0), valid(true) {;}
+  Log (wxString n, int v)
   : time1(0), name(n), val(v), valid(true) {;}
 
   bool isComputerLog() const { return name == LOG_OUT_OF_TIME 
                                       || name == LOG_START_TIMER; }
-  void write (const string& fname) const;
+  void write (const wxString& fname) const;
 
 
   enum Type // 2-Bit
@@ -151,7 +151,7 @@ class Logbook
                               // sollen.
                               // ! Zeigt immer auf einen gueltigen Log oder auf
                               // ! den ersten
-    void    writeOptions (const string& fname) const;
+    void    writeOptions (const wxString& fname) const;
     char    Int6ToChar (int num) const;
     int     CharToInt6 (char ch) const;
 
@@ -167,8 +167,8 @@ class Logbook
     bool            eop()        const { return play_index >= cur_index; }
                                  // eop = end-of-play
 
-    void            write        (const string& fname);
-    void            read         (const string& fname);
+    void            write        (const wxString& fname);
+    void            read         (const wxString& fname);
     void            startPlaying ();
     void            stopPlaying  () { is_playing = false; }
     void            operator>>   (Log& l);
@@ -176,10 +176,10 @@ class Logbook
     bool            undo         (bool all);
     bool            redo         (Log& log);
     bool            invalidateLast ();
-//    string          getLogsAsStr () const;
-//    void            setLogs      (const string& text);
-    string          exportStr () const;
-    void            importStr (const string& text);
+//    wxString          getLogsAsStr () const;
+//    void            setLogs      (const wxString& text);
+    wxString          exportStr () const;
+    void            importStr (const wxString& text);
 };
 
 

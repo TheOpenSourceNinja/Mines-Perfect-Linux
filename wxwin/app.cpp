@@ -197,7 +197,7 @@ bool MainApp::OnInit()
   try
   {
     Options* opt = new MinesPerfect::Options();
-    main_win = new MainWindow("Mines-Perfect", 
+    main_win = new MainWindow(wxT("Mines-Perfect"), 
                               wxPoint(opt->getXPos(), opt->getYPos()),
                               wxSize(500, 500));
     SetTopWindow(main_win);
@@ -216,7 +216,7 @@ bool MainApp::OnInit()
   }
   catch (...)
   {
-    MinesPerfect::Exception exc("unknown exception.");
+    MinesPerfect::Exception exc(wxT("unknown exception."));
     showException(exc);
   }
 
@@ -236,7 +236,7 @@ int MainApp::MainLoop()
   }
   catch (...)
   {
-    MinesPerfect::Exception exc("unknown exception.");
+    MinesPerfect::Exception exc(wxT("unknown exception."));
     showException(exc);
   }
   
@@ -309,69 +309,69 @@ MainWindow::MainWindow(const wxString &title, const wxPoint &pos, const wxSize &
   MenuBar       = new wxMenuBar;
 
   // create a Game-Menu
-  GameMenu->Append( MENU_GAME_NEW,          "&New\tCtrl-N",  "New game" );
-  GameMenu->Append( MENU_GAME_OPEN,         "&Open\tCtrl-O", "Open a saved game" );
-  GameMenu->Append( MENU_GAME_SAVE,         "&Save\tCtrl-S", "Save the game" );
+  GameMenu->Append( MENU_GAME_NEW,          wxT("&New\tCtrl-N"),  wxT("New game") );
+  GameMenu->Append( MENU_GAME_OPEN,         wxT("&Open\tCtrl-O"), wxT("Open a saved game") );
+  GameMenu->Append( MENU_GAME_SAVE,         wxT("&Save\tCtrl-S"), wxT("Save the game") );
   GameMenu->AppendSeparator();
-  GameMenu->Append( MENU_GAME_BEGINNER,     "&Beginner",     "", true );
-  GameMenu->Append( MENU_GAME_INTERMEDIATE, "&Intermediate", "", true );
-  GameMenu->Append( MENU_GAME_EXPERT,       "&Expert",       "", true );
-  GameMenu->Append( MENU_GAME_SELFDEFINED,  "Self&defined",  "", true );
+  GameMenu->Append( MENU_GAME_BEGINNER,     wxT("&Beginner"),     wxT(""), true );
+  GameMenu->Append( MENU_GAME_INTERMEDIATE, wxT("&Intermediate"), wxT(""), true );
+  GameMenu->Append( MENU_GAME_EXPERT,       wxT("&Expert"),       wxT(""), true );
+  GameMenu->Append( MENU_GAME_SELFDEFINED,  wxT("Self&defined"),  wxT(""), true );
   GameMenu->AppendSeparator();
-  GameMenu->Append( MENU_GAME_ORIGINAL,     "O&riginal",     "", true );
-  GameMenu->Append( MENU_GAME_IMMUNE,       "Imm&une",       "", true );
-  GameMenu->Append( MENU_GAME_LUCKY,        "&Lucky",        "", true );
-  GameMenu->Append( MENU_GAME_HINT,         "&Hint",         "", true );
-  GameMenu->Append( MENU_GAME_STARTUP,      "&Startup",      "", true );
-  GameMenu->Append( MENU_GAME_MURPHY_S_LAW, "&MurphysLaw",   "", true );
+  GameMenu->Append( MENU_GAME_ORIGINAL,     wxT("O&riginal"),     wxT(""), true );
+  GameMenu->Append( MENU_GAME_IMMUNE,       wxT("Imm&une"),       wxT(""), true );
+  GameMenu->Append( MENU_GAME_LUCKY,        wxT("&Lucky"),        wxT(""), true );
+  GameMenu->Append( MENU_GAME_HINT,         wxT("&Hint"),         wxT(""), true );
+  GameMenu->Append( MENU_GAME_STARTUP,      wxT("&Startup"),      wxT(""), true );
+  GameMenu->Append( MENU_GAME_MURPHY_S_LAW, wxT("&MurphysLaw"),   wxT(""), true );
   GameMenu->AppendSeparator();
-  GameMenu->Append( MENU_GAME_BEST_TIMES,   "Best&Times"    );
+  GameMenu->Append( MENU_GAME_BEST_TIMES,   wxT("Best&Times")    );
   GameMenu->AppendSeparator();
-  GameMenu->Append( MENU_GAME_EXIT,         "E&xit"         );
+  GameMenu->Append( MENU_GAME_EXIT,         wxT("E&xit")         );
 
   GameMenu->Enable( MENU_GAME_LUCKY, false );
   GameMenu->Check ( MENU_GAME_BEGINNER, true);
 
   // Create Help-Menu
-  HelpMenu->Append( MENU_HELP_HINT,      "&Hint\tCtrl-H"    );
-  HelpMenu->Append( MENU_HELP_SOLVE_ONE, "Solve&One\tCtrl-L");
+  HelpMenu->Append( MENU_HELP_HINT,      wxT("&Hint\tCtrl-H")    );
+  HelpMenu->Append( MENU_HELP_SOLVE_ONE, wxT("Solve&One\tCtrl-L"));
   
-  SolveAllMenu->Append (MENU_HELP_SOLVE_ALL1, "Stage 1\tCtrl-1");
-  SolveAllMenu->Append (MENU_HELP_SOLVE_ALL2, "Stage 2\tCtrl-2");
-  SolveAllMenu->Append (MENU_HELP_SOLVE_ALL3, "Stage 3\tCtrl-3");
-  HelpMenu->Append     (MENU_HELP_SOLVE_ALL,  "Solve&All",  SolveAllMenu,  "");
+  SolveAllMenu->Append (MENU_HELP_SOLVE_ALL1, wxT("Stage 1\tCtrl-1"));
+  SolveAllMenu->Append (MENU_HELP_SOLVE_ALL2, wxT("Stage 2\tCtrl-2"));
+  SolveAllMenu->Append (MENU_HELP_SOLVE_ALL3, wxT("Stage 3\tCtrl-3"));
+  HelpMenu->Append     (MENU_HELP_SOLVE_ALL,  wxT("Solve&All"),  SolveAllMenu,  wxT(""));
   
-  SolveAutoMenu->Append (MENU_HELP_SOLVE_AUTO0, "Stage 0", "", true);
-  SolveAutoMenu->Append (MENU_HELP_SOLVE_AUTO1, "Stage 1", "", true);
-  SolveAutoMenu->Append (MENU_HELP_SOLVE_AUTO2, "Stage 2", "", true);
-  SolveAutoMenu->Append (MENU_HELP_SOLVE_AUTO3, "Stage 3", "", true);
-  HelpMenu->Append      (MENU_HELP_SOLVE_AUTO,  "&SolveAuto", SolveAutoMenu, "");
+  SolveAutoMenu->Append (MENU_HELP_SOLVE_AUTO0, wxT("Stage 0"), wxT(""), true);
+  SolveAutoMenu->Append (MENU_HELP_SOLVE_AUTO1, wxT("Stage 1"), wxT(""), true);
+  SolveAutoMenu->Append (MENU_HELP_SOLVE_AUTO2, wxT("Stage 2"), wxT(""), true);
+  SolveAutoMenu->Append (MENU_HELP_SOLVE_AUTO3, wxT("Stage 3"), wxT(""), true);
+  HelpMenu->Append      (MENU_HELP_SOLVE_AUTO,  wxT("&SolveAuto"), SolveAutoMenu, wxT(""));
  
-  MaxStageMenu->Append (MENU_HELP_MAX_STAGE1, "Stage 1", "", true);
-  MaxStageMenu->Append (MENU_HELP_MAX_STAGE2, "Stage 2", "", true);
-  MaxStageMenu->Append (MENU_HELP_MAX_STAGE3, "Stage 3", "", true);
-  HelpMenu->Append     (MENU_HELP_MAX_STAGE,  "&MaxStage",  MaxStageMenu,  "");
+  MaxStageMenu->Append (MENU_HELP_MAX_STAGE1, wxT("Stage 1"), wxT(""), true);
+  MaxStageMenu->Append (MENU_HELP_MAX_STAGE2, wxT("Stage 2"), wxT(""), true);
+  MaxStageMenu->Append (MENU_HELP_MAX_STAGE3, wxT("Stage 3"), wxT(""), true);
+  HelpMenu->Append     (MENU_HELP_MAX_STAGE,  wxT("&MaxStage"),  MaxStageMenu,  wxT(""));
   
-  HelpMenu->Append( MENU_HELP_SHOW_MINES, "Show Mines", "", true);
+  HelpMenu->Append( MENU_HELP_SHOW_MINES, wxT("Show Mines"), wxT(""), true);
 
   HelpMenu->AppendSeparator();
-  HelpMenu->Append( MENU_HELP_UNDO,     "&Undo\tCtrl-Z");
-  HelpMenu->Append( MENU_HELP_REDO,     "&Redo\tCtrl-Y");
-  HelpMenu->Append( MENU_HELP_UNDO_ALL, "&UndoAll\tShift-Ctrl-Z");
+  HelpMenu->Append( MENU_HELP_UNDO,     wxT("&Undo\tCtrl-Z"));
+  HelpMenu->Append( MENU_HELP_REDO,     wxT("&Redo\tCtrl-Y"));
+  HelpMenu->Append( MENU_HELP_UNDO_ALL, wxT("&UndoAll\tShift-Ctrl-Z"));
   
   HelpMenu->AppendSeparator();
-  HelpMenu->Append( MENU_HELP_CONTENTS, "&Contents");
-  HelpMenu->Append( MENU_HELP_HOMEPAGE, "Home&page");
-  HelpMenu->Append( MENU_HELP_ABOUT,    "A&bout");
+  HelpMenu->Append( MENU_HELP_CONTENTS, wxT("&Contents"));
+  HelpMenu->Append( MENU_HELP_HOMEPAGE, wxT("Home&page"));
+  HelpMenu->Append( MENU_HELP_ABOUT,    wxT("A&bout"));
 
   // Add it to the menu bar
-  MenuBar->Append( GameMenu,  "&Game");
-  MenuBar->Append( BoardMenu, "&Board");
-  MenuBar->Append( HelpMenu,  "&Help");
+  MenuBar->Append( GameMenu,  wxT("&Game"));
+  MenuBar->Append( BoardMenu, wxT("&Board"));
+  MenuBar->Append( HelpMenu,  wxT("&Help"));
   SetMenuBar(MenuBar);
     
-  dlg_dir = "";
-  dlg_file = "user.log";
+  dlg_dir = wxT("");
+  dlg_file = wxT("user.log");
 }
 
 void MainWindow::CreateBoardMenu()
@@ -379,14 +379,14 @@ void MainWindow::CreateBoardMenu()
   for (int i = 0; i < game->m_options->getNumBoards(); i++)
   {
     BoardMenu->Append (MENU_BOARD_FIRST + i, 
-                       game->m_options->getBoardName(i).c_str(), "", true);
+                       game->m_options->getBoardName(i), wxT(""), true);
   }
 }
 
 void MainWindow::OpenFile()
 {
   wxString      start_dir = wxGetCwd();
-  wxFileDialog  dlg(this, "Choose a file", dlg_dir, dlg_file, "*.log", wxOPEN);
+  wxFileDialog  dlg(this, wxT("Choose a file"), dlg_dir, dlg_file, wxT("*.log"), wxOPEN);
 
   int rc = dlg.ShowModal();
   
@@ -398,7 +398,7 @@ void MainWindow::OpenFile()
   dlg.Destroy();
   
   if (rc == wxID_OK)
-    game->load(dlg_path.c_str());
+    game->load(dlg_path);
   
   ActMenu();
 }
@@ -406,7 +406,7 @@ void MainWindow::OpenFile()
 void MainWindow::SaveFile()
 {
   wxString      start_dir = wxGetCwd();
-  wxFileDialog  dlg(this, "Choose a file", dlg_dir, dlg_file, "*.log", wxSAVE);
+  wxFileDialog  dlg(this, wxT("Choose a file"), dlg_dir, dlg_file, wxT("*.log"), wxSAVE);
 
   int rc = dlg.ShowModal();
 
@@ -671,21 +671,21 @@ void MainWindow::OnHelpRedo (wxCommandEvent& WXUNUSED(event))
 void MainWindow::OnHelpContents (wxCommandEvent& WXUNUSED(event))
 {
   // help_fname
-  wxString  help_fname = wxGetCwd() + "/help/help.html";
+  wxString  help_fname = wxGetCwd() + wxT("/help/help.html");
   if (!wxFile::Exists (help_fname))
   {
-    wxMessageDialog  dlg (this, wxString("File '") + help_fname + "' not found!",
-                          "Error", wxOK | wxICON_ERROR);
+    wxMessageDialog  dlg (this, wxString(wxT("File '")) + help_fname + wxT("' not found!"),
+                          wxT("Error"), wxOK | wxICON_ERROR);
     dlg.ShowModal();
     return;
   }
 
-  StartBrowser (string("file"), string(help_fname.c_str()));
+  StartBrowser (wxString(wxT("file")), wxString(help_fname));
 }
 
 void MainWindow::OnHelpHomepage (wxCommandEvent& WXUNUSED(event))
 {
-  StartBrowser (string("http"), string("www.czeppi.de"));
+  StartBrowser (wxString(wxT("http")), wxString(wxT("www.czeppi.de")));
 }
 
 void MainWindow::OnHelpAbout (wxCommandEvent& WXUNUSED(event))

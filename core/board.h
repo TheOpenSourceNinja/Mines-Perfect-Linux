@@ -93,9 +93,9 @@ private:
     bool   toggleMineIfPoss    (CellNr k, Logbook& logbook);
     void   chkMines            (void);
     int    calcMaxTime         (Logbook& logbook);
-    void   read                (string fname, Level& level);
+    void   read                (wxString fname, Level& level);
     void   readChkVal (int    val,      int val_min, int    val_max,
-                       string obj_name, int obj_nr,  string obj_komp);
+                       wxString obj_name, int obj_nr,  wxString obj_komp);
 
 public:
     Board (Options& opt, Logbook& logbook);

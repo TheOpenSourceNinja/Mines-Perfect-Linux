@@ -25,6 +25,10 @@
 
 #include "utils.h"
 
+#ifdef LINUX
+  #include "linux-compatibility.h"
+#endif
+
 using namespace MinesPerfect;
 using namespace std;
 
@@ -76,7 +80,7 @@ std::string MinesPerfect::Lower (const std::string& s)
 
 //  for (string::iterator i = s2.begin(); i != s2.end(); ++i)
 //    *i = tolower(*i);
-  transform (s2.begin(), s2.end(), s2.begin(), tolower);
+  transform (s2.begin(), s2.end(), s2.begin(), ::tolower);
 
   return s2;
 }

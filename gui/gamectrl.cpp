@@ -717,7 +717,7 @@ void GameCtrl::playLog (const Log& log, bool with_sound)
 void GameCtrl::playLogbook()
 //------------------------------------------------------------------------------
 {
-  // Während der Wiederholung den Sound abstellen
+  // Waehrend der Wiederholung den Sound abstellen
   bool  with_sound_old = m_options->getWithSound();
   m_options->setWithSound (false);
 

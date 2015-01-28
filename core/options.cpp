@@ -21,6 +21,7 @@
 
 #ifdef LINUX
   #define stricmp strcasecmp
+  #include <strings.h>
 #endif
 
 using namespace std;

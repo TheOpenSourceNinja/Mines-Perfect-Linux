@@ -64,7 +64,7 @@ extern MainWindow*  main_win;
 //******************************************************************************
 AboutDialog::AboutDialog(wxWindow *parent)
 //------------------------------------------------------------------------------
-    : wxDialog(parent, -1, wxString("About"))
+    : wxDialog(parent, -1, wxString(wxT("About")))
 {
     m_topsizer = new wxBoxSizer(wxVERTICAL);
     m_hsizer1  = new wxBoxSizer(wxHORIZONTAL);
@@ -72,15 +72,16 @@ AboutDialog::AboutDialog(wxWindow *parent)
 
 //    m_bitmap = new wxStaticBitmap(this, -1, wxIcon("mine32.ico", wxBITMAP_TYPE_ICO));
     m_bitmap = new wxStaticBitmap(this, -1, wxIcon(mine32_xpm));
-    m_text1  = new wxStaticText(this, -1, wxString ("Mines-Perfect\n\nVersion ") 
-                   + wxString ('0' + MinesPerfect::Glob::VERSION / 100 % 10, 1) + "."
-                   + wxString ('0' + MinesPerfect::Glob::VERSION /  10 % 10, 1) + "."
-                   + wxString ('0' + MinesPerfect::Glob::VERSION /   1 % 10, 1));
-    m_text2  = new wxStaticText(this, -1, "Copyright(c) 1995-2003, Christian Czepluch\n"
-                                          "This program is distributed under the terms of the\n"
-                                          "GNU General Public License (GPL)  (see copyright.txt)");
-    m_text3  = new wxStaticText(this, -1, "www.czeppi.de");
-    m_button = new wxButton(this, wxID_OK , "OK");
+    m_text1  = new wxStaticText(this, -1, wxString (wxT("Mines-Perfect\n\nVersion ")) 
+                   + wxString ((wxChar) (wxT('0') + MinesPerfect::Glob::VERSION / 100 % 10), 1) + wxT(".")
+                   + wxString ((wxChar) (wxT('0') + MinesPerfect::Glob::VERSION /  10 % 10), 1) + wxT(".")
+                   + wxString ((wxChar) (wxT('0') + MinesPerfect::Glob::VERSION /   1 % 10), 1));
+    m_text2  = new wxStaticText(this, -1, wxT("Copyright(c) 1995-2003, Christian Czepluch\n")
+                                          wxT("Copyright(c) 2015, James Dearing\n")
+                                          wxT("This program is distributed under the terms of the\n")
+                                          wxT("GNU General Public License (GPL)  (see copyright.txt)"));
+    m_text3  = new wxStaticText(this, -1, wxT("www.czeppi.de"));
+    m_button = new wxButton(this, wxID_OK , wxT("OK"));
 
     m_hsizer1->Add(m_bitmap, 0, wxALL, 5);
     m_hsizer1->Add(0, 0, 2);
@@ -125,22 +126,22 @@ void ShowBestTimesDialog::Show()
     m_score_sizer->Remove(i);
   }
 
-  wxString  level_str_list[] = { "Beginner", "Intermediate", "Expert" };
+  wxString  level_str_list[] = { wxT("Beginner"), wxT("Intermediate"), wxT("Expert") };
 
   for (i = 0; i <= 2; ++i)
   {
     wxString time_str, name_str, lable_str, send_str, level_str;
 
     level_str = level_str_list[i];
-    level_str += ":";
+    level_str += wxT(":");
     
-    time_str << m_options->getBoardType(m_sel_board)->records[i].time / 1000 << ","
-             << m_options->getBoardType(m_sel_board)->records[i].time % 1000 << " s";
+    time_str << m_options->getBoardType(m_sel_board)->records[i].time / 1000 << wxT(",")
+             << m_options->getBoardType(m_sel_board)->records[i].time % 1000 << wxT(" s");
 
     if (m_options->getBoardType(m_sel_board)->records[i].time < MAX_MSECS
     &&  m_options->getBoardType(m_sel_board)->records[i].certified_board
     && !m_options->getBoardType(m_sel_board)->records[i].was_send)
-      time_str = "* " + time_str;
+      time_str = wxT("* ") + time_str;
 
     name_str << m_options->getBoardType(m_sel_board)->records[i].name.c_str();
 
@@ -160,7 +161,7 @@ void ShowBestTimesDialog::Show()
 
   m_send_button->Enable( rec.time < MAX_MSECS && rec.certified_board );
   m_send_button->SetLabel( rec.time < MAX_MSECS && rec.certified_board && rec.was_send ? 
-                           "Set *" : "Send");
+                           wxT("Set *") : wxT("Send"));
   m_reset_button->Enable( rec.time < MAX_MSECS );
 //  m_show_button->Enable( rec.certified_board ); // geht so nicht,
 //      weil:         rec.time == MAX_MSECS => !rec.certified_board                  
@@ -175,7 +176,7 @@ void ShowBestTimesDialog::Show()
 ShowBestTimesDialog::ShowBestTimesDialog(wxWindow *parent, 
                                          MinesPerfect::Options* options)
 //------------------------------------------------------------------------------
-    : wxDialog(parent, -1, wxString("Best Times")), m_options(options), 
+    : wxDialog(parent, -1, wxString(wxT("Best Times"))), m_options(options), 
       m_sel_board(options->getBoardNr()), m_sel_level(options->getLevelNr())
 {
   int i;
@@ -201,19 +202,19 @@ ShowBestTimesDialog::ShowBestTimesDialog(wxWindow *parent,
   // scores
   for (i = 0; i < 3; ++i)
   {
-    m_select_buttons[i] = new wxRadioButton (this, -1, "");
-    m_level_text[i]     = new wxStaticText  (this, -1, "");
-    m_time_text[i]      = new wxStaticText  (this, -1, "");
-    m_name_text[i]      = new wxStaticText  (this, -1, "");
+    m_select_buttons[i] = new wxRadioButton (this, -1, wxT(""));
+    m_level_text[i]     = new wxStaticText  (this, -1, wxT(""));
+    m_time_text[i]      = new wxStaticText  (this, -1, wxT(""));
+    m_name_text[i]      = new wxStaticText  (this, -1, wxT(""));
   }
   
   // buttons
-  m_reset_button = new wxButton(this, -1, "Reset");
-  m_send_button  = new wxButton(this, -1, "Send");
-  m_show_button  = new wxButton(this, -1, "Show");
+  m_reset_button = new wxButton(this, -1, wxT("Reset"));
+  m_send_button  = new wxButton(this, -1, wxT("Send"));
+  m_show_button  = new wxButton(this, -1, wxT("Show"));
 
   // nobody
-  m_nobody_text = new wxStaticText(this, -1, "(nobody will be the last one!)");
+  m_nobody_text = new wxStaticText(this, -1, wxT("(nobody will be the last one!)"));
 
   // es muessen alle Elemente von scoresizer eingefuegt werden,
   // ansonsten gibt's eine Assert-Exception beim
@@ -221,7 +222,7 @@ ShowBestTimesDialog::ShowBestTimesDialog(wxWindow *parent,
   for (i = 0; i < 3 * 4; ++i)
     m_score_sizer->Add(0, 0, 0);
 
-  m_ok_button = new wxButton(this, wxID_OK, "OK");
+  m_ok_button = new wxButton(this, wxID_OK, wxT("OK"));
   
   m_button_sizer1->Add(0, 0, 1);
   m_button_sizer1->Add(m_show_button, 0, wxALL, 5);
@@ -292,14 +293,18 @@ void ShowBestTimesDialog::OnButton(wxCommandEvent& event)
   else if (event.GetEventObject() == m_send_button
        ||  event.GetEventObject() == m_show_button)
   {
-    ostringstream ost;
+    #ifndef wxUSE_UNICODE
+      ostringstream ost;
+    #else
+      wostringstream ost;
+    #endif
   
-    ost << "mines-perfect.sourceforge.net/highscores.php"
-        << "?board="    << m_options->getBoardType(m_sel_board)->name 
-        << "&level="    << m_sel_level;
+    ost << wxT("mines-perfect.sourceforge.net/highscores.php")
+        << wxT("?board=")    << m_options->getBoardType(m_sel_board)->name 
+        << wxT("&level=")    << m_sel_level;
 
     // password von Options
-    string  password = "";
+    wxString  password = wxT("");
 
     for (int i = 0; i < m_options->getNumUsers(); ++i)
     {
@@ -314,12 +319,12 @@ void ShowBestTimesDialog::OnButton(wxCommandEvent& event)
     {
       // rec->name ok?
       MinesPerfect::User::NameChecker  name_checker;
-      string                           err_text;
+      wxString                           err_text;
 
       if (!name_checker.isValidString(rec->name, &err_text))
       {
         // user_vec, user_list
-        vector<string> user_vec;
+        vector<wxString> user_vec;
         m_options->getUserlist(user_vec);
 
         wxString* user_list = new wxString[user_vec.size()];
@@ -329,12 +334,12 @@ void ShowBestTimesDialog::OnButton(wxCommandEvent& event)
 
         // new_name
         wxString msg_text =
-          wxString("Your name isn't valid. Please choose another one.\n")
-                   + "(" + err_text.c_str() + ")";
+          wxString(wxT("Your name isn't valid. Please choose another one.\n"))
+                   + wxT("(") + err_text.c_str() + wxT(")");
 
         wxString           new_name = rec->name.c_str();
         GenValidator       validator (&new_name, &name_checker);
-        ChooseComboDialog  dlg (this, msg_text, "Invalid name", 
+        ChooseComboDialog  dlg (this, msg_text, wxT("Invalid name"), 
                                 user_vec.size(), user_list, validator);
 
         // rename User
@@ -350,21 +355,21 @@ void ShowBestTimesDialog::OnButton(wxCommandEvent& event)
       }
 
       // password von Dialog
-      if (password == "")
+      if (password == wxT(""))
       {
         wxString  msg_text =
-          "You need a password for the case,\n"
-          "that another user has the same name like you.\n"
-          "Use your email-adress for example.\n";
+          wxT("You need a password for the case,\n")
+          wxT("that another user has the same name like you.\n")
+          wxT("Use your email-adress for example.\n");
 
-        wxString                             new_password = "";
+        wxString                             new_password = wxT("");
         MinesPerfect::User::PasswordChecker  password_checker;
 
         GenValidator       validator (&new_password, &password_checker);
-        ChooseComboDialog  dlg (this, msg_text, "Password?", 
+        ChooseComboDialog  dlg (this, msg_text, wxT("Password?"), 
                                 0, 0, validator);
 
-        if (dlg.ShowModal() != wxID_OK || new_password == "")
+        if (dlg.ShowModal() != wxID_OK || new_password == wxT(""))
         {
           Show();
           return;
@@ -380,20 +385,20 @@ void ShowBestTimesDialog::OnButton(wxCommandEvent& event)
         password = new_password.c_str();
       }
 
-      ost << "&name="     << rec->name 
-          << "&password=" << password
-          << "&time="     << rec->time
-          << "&checksum=" << board_type->getChecksum(m_sel_level,Glob::VERSION);
+      ost << wxT("&name=")     << rec->name 
+          << wxT("&password=") << password
+          << wxT("&time=")     << rec->time
+          << wxT("&checksum=") << board_type->getChecksum(m_sel_level,Glob::VERSION);
     }
     else if (event.GetEventObject() == m_show_button)
     {
-      if (rec->time < MAX_MSECS && rec->certified_board && password != "")
-        ost << "&name="     << rec->name 
-            << "&password=" << password;
+      if (rec->time < MAX_MSECS && rec->certified_board && password != wxT(""))
+        ost << wxT("&name=")     << rec->name 
+            << wxT("&password=") << password;
     }
 
     // start browser
-    StartBrowser (string("http"), ost.str());
+    StartBrowser (wxString(wxT("http")), ost.str());
 
     if (event.GetEventObject() == m_send_button)
       rec->was_send = true;
@@ -414,7 +419,7 @@ END_EVENT_TABLE()
 SelfdefinedDialog::SelfdefinedDialog(wxWindow *parent, 
                                      MinesPerfect::Level* lvl)
 //------------------------------------------------------------------------------
-    : wxDialog(parent, -1, wxString("Selfdefined")) //, m_board_type(board_type)
+    : wxDialog(parent, -1, wxString(wxT("Selfdefined"))) //, m_board_type(board_type)
 {
   m_level = lvl;
 
@@ -429,32 +434,32 @@ SelfdefinedDialog::SelfdefinedDialog(wxWindow *parent,
   
   m_inputsizer = new wxFlexGridSizer(2, 4, 5);
   
-  m_inputsizer->Add(new wxStaticText(this, -1, "Rows:"), 0, 
+  m_inputsizer->Add(new wxStaticText(this, -1, wxT("Rows:")), 0, 
                     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
   m_rowsctrl = new wxTextCtrl(this, -1, rows_str);
   m_inputsizer->Add(m_rowsctrl, 1, wxGROW | wxALIGN_CENTER_VERTICAL);
   
-  m_inputsizer->Add(new wxStaticText(this, -1, "Columns:"), 0, 
+  m_inputsizer->Add(new wxStaticText(this, -1, wxT("Columns:")), 0, 
                     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
   m_colsctrl = new wxTextCtrl(this, -1, cols_str);
   m_inputsizer->Add(m_colsctrl, 1, wxGROW | wxALIGN_CENTER_VERTICAL);
   
   if (m_level->deep > 0)
   {
-    m_inputsizer->Add(new wxStaticText(this, -1, "Pages:"), 0, 
+    m_inputsizer->Add(new wxStaticText(this, -1, wxT("Pages:")), 0, 
                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
     m_pagesctrl = new wxTextCtrl(this, -1, pages_str);
     m_inputsizer->Add(m_pagesctrl, 1, wxGROW | wxALIGN_CENTER_VERTICAL);
   }
   
-  m_inputsizer->Add(new wxStaticText(this, -1, "Mines:"), 0, 
+  m_inputsizer->Add(new wxStaticText(this, -1, wxT("Mines:")), 0, 
                     wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
   m_minesctrl = new wxTextCtrl(this, -1, mines_str);
   m_inputsizer->Add(m_minesctrl, 1, wxGROW | wxALIGN_CENTER_VERTICAL);
   
   if (m_level->num_wholes > -1)
   {
-    m_inputsizer->Add(new wxStaticText(this, -1, "Wholes:"), 0, 
+    m_inputsizer->Add(new wxStaticText(this, -1, wxT("Wholes:")), 0, 
                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
     m_wholesctrl = new wxTextCtrl(this, -1, wholes_str);
     m_inputsizer->Add(m_wholesctrl, 1, wxGROW | wxALIGN_CENTER_VERTICAL);
@@ -464,9 +469,9 @@ SelfdefinedDialog::SelfdefinedDialog(wxWindow *parent,
   m_buttonsizer = new wxBoxSizer(wxVERTICAL);
 
   m_buttonsizer->Add(0, 0, 1);
-  m_buttonsizer->Add(new wxButton(this, wxID_OK , "OK"), 0, wxALL, 5);
+  m_buttonsizer->Add(new wxButton(this, wxID_OK , wxT("OK")), 0, wxALL, 5);
   m_buttonsizer->Add(0, 0, 1);
-  m_buttonsizer->Add(new wxButton(this, wxID_CANCEL, "Cancel"), 0, wxALL, 5);
+  m_buttonsizer->Add(new wxButton(this, wxID_CANCEL, wxT("Cancel")), 0, wxALL, 5);
   m_buttonsizer->Add(0, 0, 1);
   
   // topsizer
@@ -516,8 +521,8 @@ END_EVENT_TABLE()
 bool GenValidator::Validate(wxWindow *parent)
 //------------------------------------------------------------------------------
 {
-  std::string  errmsg = "";
-  std::string  text;
+  wxString  errmsg = wxT("");
+  wxString  text;
 
   if (m_validatorWindow == 0)
      return false;
@@ -528,13 +533,13 @@ bool GenValidator::Validate(wxWindow *parent)
 
   if (m_checker != 0)
   {
-    if (errmsg != "" 
+    if (errmsg != wxT("") 
     ||  !m_checker->isValidString (text, &errmsg))
     {
       m_validatorWindow->SetFocus();
-      errmsg = std::string("'") + text + "' " + errmsg;
+      errmsg = wxString(wxT("'")) + text + wxT("' ") + errmsg;
 
-      wxMessageBox( errmsg.c_str(), "Validation conflict", 
+      wxMessageBox( errmsg.c_str(), wxT("Validation conflict"), 
                     wxOK | wxICON_EXCLAMATION, parent);
 
       return false;
@@ -579,7 +584,7 @@ void GenValidator::OnChar(wxKeyEvent& event)
   if (m_validatorWindow)
   {
     int      ch     = (int)event.KeyCode();
-    wxString errmsg = "";
+    wxString errmsg = wxT("");
 
     // we don't filter special keys and Delete
     if (ch >= WXK_SPACE && ch != WXK_DELETE && ch <= WXK_START
@@ -613,7 +618,7 @@ ChooseComboDialog::ChooseComboDialog
   : wxDialog(parent, -1, title), m_n(n), m_list(choices)
 {
   m_msg_text = new wxStaticText(this, -1, msg);
-  m_combo    = new wxComboBox(this, -1, "nobody", 
+  m_combo    = new wxComboBox(this, -1, wxT("nobody"), 
                               wxDefaultPosition, wxDefaultSize, 
                               n, choices, 0, validator);
 
@@ -621,9 +626,9 @@ ChooseComboDialog::ChooseComboDialog
   m_buttonsizer = new wxBoxSizer(wxHORIZONTAL);
 
   m_buttonsizer->Add(0, 0, 1);
-  m_buttonsizer->Add(new wxButton(this, wxID_OK, "OK"), 0, wxALL, 5);
+  m_buttonsizer->Add(new wxButton(this, wxID_OK, wxT("OK")), 0, wxALL, 5);
   m_buttonsizer->Add(0, 0, 1);
-  m_buttonsizer->Add(new wxButton(this, wxID_CANCEL, "Cancel"), 0, wxALL, 5);
+  m_buttonsizer->Add(new wxButton(this, wxID_CANCEL, wxT("Cancel")), 0, wxALL, 5);
   m_buttonsizer->Add(0, 0, 1);
   
   // topsizer
@@ -649,21 +654,21 @@ END_EVENT_TABLE()
 //******************************************************************************
 ExceptionDialog::ExceptionDialog(wxWindow *parent, const wxString& exc_text)
 //------------------------------------------------------------------------------
-    : wxDialog(parent, -1, wxString("Exception")),
+    : wxDialog(parent, -1, wxString(wxT("Exception"))),
       m_exc_text(exc_text)
 {
     m_topsizer    = new wxBoxSizer(wxVERTICAL);
     m_buttonsizer = new wxBoxSizer(wxHORIZONTAL);
 
     wxString msg_text 
-      = exc_text + "\n\n"
-        + "Please send a bugreport for making Mines-Perfect better.\n"
-        + "(It's very easy. You only need an internet connection.)";
+      = exc_text + wxT("\n\n")
+        + wxT("Please send a bugreport for making Mines-Perfect better.\n")
+        + wxT("(It's very easy. You only need an internet connection.)");
 
     m_static_text   = new wxStaticText(this, -1, msg_text);
-    m_send_button   = new wxButton(this, -1,          "Send");
-    m_save_button   = new wxButton(this, -1,          "Save");
-    m_cancel_button = new wxButton(this, wxID_CANCEL, "Cancel");
+    m_send_button   = new wxButton(this, -1,          wxT("Send"));
+    m_save_button   = new wxButton(this, -1,          wxT("Save"));
+    m_cancel_button = new wxButton(this, wxID_CANCEL, wxT("Cancel"));
 
     m_buttonsizer->Add(0, 0, 1);
     m_buttonsizer->Add(m_send_button, 0, wxALL, 5);
@@ -689,17 +694,17 @@ void ExceptionDialog::OnButton(wxCommandEvent& event)
 {
   if (event.GetEventObject() == m_send_button)
   {
-    wxString str = wxString("mines-perfect.sourceforge.net/bugreport.php?")
-                   + "exceptiontext=" + m_exc_text 
-                   + "&logdata=" 
-                   + main_win->game->m_logbook->exportStr().c_str();
+    wxString str = wxString(wxT("mines-perfect.sourceforge.net/bugreport.php?"))
+                   + wxT("exceptiontext=") + m_exc_text 
+                   + wxT("&logdata=") 
+                   + main_win->game->m_logbook->exportStr();
 
-    StartBrowser (string("http"), str.c_str());
+    StartBrowser (wxString(wxT("http")), str.c_str());
   }
   else if (event.GetEventObject() == m_save_button)
   {
     wxString      start_dir = wxGetCwd();
-    wxFileDialog  dlg(main_win, "Choose a file", "", "", "*.log", wxSAVE);
+    wxFileDialog  dlg(main_win, wxT("Choose a file"), wxT(""), wxT(""), wxT("*.log"), wxSAVE);
 
     int rc = dlg.ShowModal();
 

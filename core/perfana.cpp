@@ -23,10 +23,16 @@
 #include <set>
 #include <time.h>
 #include <stdio.h>
+#include <iostream> //Needed for cerr
+#include <cstring> //Needed for strlen()
 
 #ifdef VISUAL_CPP
   #include <iostream> // visual studio (cerr)
   #include <minmax.h> // visual studio (max)
+#endif
+
+#ifdef LINUX
+  #include "linux-compatibility.h"
 #endif
 
 using namespace std;
@@ -135,7 +141,7 @@ Perf::~Perf()
     const string  title_self_aver  = "self/call";
     const string  title_total_aver = "total/call";
     ulong         max_name_len     = title_name.length();
-    ulong         max_percent      = max (title_percent.length(), 4U);
+    ulong         max_percent      = max ((ulong)title_percent.length(), (ulong)4U);
     ulong         max_total        = title_total.length();
     ulong         max_self         = title_self.length();
     ulong         max_num_calls    = title_num_calls.length();

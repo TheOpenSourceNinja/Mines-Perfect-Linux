@@ -79,7 +79,7 @@ public:
   virtual ~Bitmap() { };
 };
 
-Bitmap* CreateBitmap (const string& kind, const string& spec);
+Bitmap* CreateBitmap (const wxString& kind, const wxString& spec);
 Bitmap* CreateBitmap (const Bitmap* from, const Rect& rect);
 Bitmap* CreateBitmap (const vector<Color>& data, int w);
 
@@ -94,7 +94,7 @@ public:
   virtual ~Sound() { }
 };
 
-Sound* CreateSound (const string& name);
+Sound* CreateSound (const wxString& name);
 
 //******************************************************************************
 class Timer // : protected TTimer
@@ -122,10 +122,10 @@ void WinDrawBitmap (const Bitmap* bmp, const Point& p);  //     "
 void WinDrawBevel  (const Rect& rect, int thickness, bool raised);
 
 void DlgNewRecord (Options* options, int num_msecs, bool certified_board);
-void FindFiles (vector<string>& files, const string& pattern);
-bool FileExist (const string& fname);
-void ShowMessageDlg (const string& text, const string& title);
-bool StartBrowser (const string& protokoll, const string& fname);
+void FindFiles (vector<wxString>& files, const wxString& pattern);
+bool FileExist (const wxString& fname);
+void ShowMessageDlg (const wxString& text, const wxString& title);
+bool StartBrowser (const wxString& protokoll, const wxString& fname);
 
 } // namespace MinesPerfect
 

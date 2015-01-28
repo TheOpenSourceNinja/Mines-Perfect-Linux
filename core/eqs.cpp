@@ -26,6 +26,10 @@
 
 using namespace std;
 
+#ifdef LINUX
+  #include "linux-compatibility.h"
+#endif
+
 #include "eqs.h"
 #include "api.h"
 #include "perfana.h"

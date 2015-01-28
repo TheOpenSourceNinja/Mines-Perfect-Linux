@@ -55,14 +55,14 @@
   {
   public:
     wxWave() {}
-    void Create(const char* fname) {}
+    void Create(const wxString fname) {}
     void Play() {}
     bool IsOk() { return false; }
   };
 #endif
 
 #ifdef LINUX
-#include "../core/linux-compatibility.h"
+  #include "../core/linux-compatibility.h"
 #endif
 
 #include "../gui/gamectrl.h"
@@ -143,11 +143,11 @@ void PrepareImage (wxImage& image, bool transparent)
 }
 
 //******************************************************************************
-void LoadImage (wxImage& image, const string& fname, bool transparent)
+void LoadImage (wxImage& image, const wxString& fname, bool transparent)
 //------------------------------------------------------------------------------
 //  als Transparentfarbe wird das Pixel links unten genommen
 {
-  ASSERT (image.LoadFile (fname.c_str(), wxBITMAP_TYPE_BMP));
+  ASSERT (image.LoadFile (fname, wxBITMAP_TYPE_BMP));
 
   wxColour win_bg_col = main_win->GetBackgroundColour();
   wxColour bg_col (*wxLIGHT_GREY);
@@ -237,7 +237,7 @@ class BitmapImpl : public MinesPerfect::Bitmap
 //------------------------------------------------------------------------------
 {
 public:
-  BitmapImpl (const string& kind, const string& spec);
+  BitmapImpl (const wxString& kind, const wxString& spec);
   BitmapImpl (const MinesPerfect::Bitmap* from, const MinesPerfect::Rect& rect);
   BitmapImpl (const vector<MinesPerfect::Color>& data, int w); // w = width
   ~BitmapImpl() {}
@@ -253,7 +253,7 @@ public:
 };
 
 MinesPerfect::Bitmap* 
-MinesPerfect::CreateBitmap (const string& kind, const string& spec)
+MinesPerfect::CreateBitmap (const wxString& kind, const wxString& spec)
 {
   return new BitmapImpl (kind, spec);
 }
@@ -292,22 +292,22 @@ BitmapImpl::BitmapImpl (const vector<MinesPerfect::Color>& data, int w) // w = w
 }
 
 //******************************************************************************
-BitmapImpl::BitmapImpl (const string& kind, const string& spec)
+BitmapImpl::BitmapImpl (const wxString& kind, const wxString& spec)
 //------------------------------------------------------------------------------
 {
   int      nr       = -1;
   int      num_cols = -1;
   int      num_rows = -1;
 
-  if (kind == "board")
+  if (kind == wxT("board"))
   {
-    string  fname = string("./boards/") + spec + ".bmp";
+    wxString  fname = wxString(wxT("./boards/")) + spec + wxT(".bmp");
 
-    if      (wxFile::Exists (fname.c_str()))  LoadImage (image, fname, true);
-    else if (spec == "Square")                image = square_image;
-    else if (spec == "Triangle")              image = triangle_image;
-    else if (spec == "Hexagon")               image = hexagon_image;
-    else if (spec == "3d-Grid")               image = grid3d_image;
+    if      (wxFile::Exists (fname))  LoadImage (image, fname, true);
+    else if (spec == wxT("Square"))                image = square_image;
+    else if (spec == wxT("Triangle"))              image = triangle_image;
+    else if (spec == wxT("Hexagon"))               image = hexagon_image;
+    else if (spec == wxT("3d-Grid"))               image = grid3d_image;
     else      
       ASSERT (false);
     
@@ -315,31 +315,31 @@ BitmapImpl::BitmapImpl (const string& kind, const string& spec)
     return;
   }
 
-  if (kind == "smiley")
+  if (kind == wxT("smiley"))
   {
-    if      (spec == "happy")    nr = 0;
-    else if (spec == "1eye")     nr = 1;
-    else if (spec == "2eyes")    nr = 2;
-    else if (spec == "3eyes")    nr = 3;
-    else if (spec == "4eyes")    nr = 4;
-    else if (spec == "norm")     nr = 5;
-    else if (spec == "ooh")      nr = 6;
-    else if (spec == "worry")    nr = 7;
-    else if (spec == "sunglass") nr = 8;
-    else if (spec == "tmp")      nr = 9;
+    if      (spec == wxT("happy"))    nr = 0;
+    else if (spec == wxT("1eye"))     nr = 1;
+    else if (spec == wxT("2eyes"))    nr = 2;
+    else if (spec == wxT("3eyes"))    nr = 3;
+    else if (spec == wxT("4eyes"))    nr = 4;
+    else if (spec == wxT("norm"))     nr = 5;
+    else if (spec == wxT("ooh"))      nr = 6;
+    else if (spec == wxT("worry"))    nr = 7;
+    else if (spec == wxT("sunglass")) nr = 8;
+    else if (spec == wxT("tmp"))      nr = 9;
 
     num_cols = 5;
     num_rows = 2;     
     image    = smileys_image;
   }
-  else if (kind == "lcd")
+  else if (kind == wxT("lcd"))
   {
-    nr = atoi (spec.c_str());
+    nr = strToInt (spec);
     
     if (nr <= 0)
     {
-      if      (spec == "0")    nr =  0;
-      else if (spec == "-")    nr = 10;
+      if      (spec == wxT("0"))    nr =  0;
+      else if (spec == wxT("-"))    nr = 10;
       else                     nr = -1;
     }
 
@@ -347,9 +347,9 @@ BitmapImpl::BitmapImpl (const string& kind, const string& spec)
     num_rows =  1;    
     image    = lcd_image;
   }
-  else if (kind == "symbol")
+  else if (kind == wxT("symbol"))
   {
-    nr = atoi (spec.c_str());
+    nr = strToInt( spec );
 
     // enthaelt spec eine Zahl?
     if (nr > 0)
@@ -358,11 +358,11 @@ BitmapImpl::BitmapImpl (const string& kind, const string& spec)
     }
     else // keine Zahl (oder 0)
     {
-      if      (spec == "flag")   nr =  0;
-      else if (spec == "quest")  nr =  1;
-      else if (spec == "mine")   nr =  2;
-      else if (spec == "cross")  nr =  3;
-      else if (spec == "0")      nr =  4;
+      if      (spec == wxT("flag"))   nr =  0;
+      else if (spec == wxT("quest"))  nr =  1;
+      else if (spec == wxT("mine"))   nr =  2;
+      else if (spec == wxT("cross"))  nr =  3;
+      else if (spec == wxT("0"))      nr =  4;
       else                       nr = -1; // fehler
     }
 
@@ -370,10 +370,10 @@ BitmapImpl::BitmapImpl (const string& kind, const string& spec)
     num_rows = 8;    
     image    = symbols_image;
   }
-  else if (kind == "button")
+  else if (kind == wxT("button"))
   {
-    if      (spec == "up")   nr =  0;
-    else if (spec == "down") nr =  1;
+    if      (spec == wxT("up"))   nr =  0;
+    else if (spec == wxT("down")) nr =  1;
 
     num_cols = 2;
     num_rows = 1;    
@@ -436,25 +436,25 @@ class SoundImpl : public MinesPerfect::Sound, public wxWave
 //------------------------------------------------------------------------------
 {
 public:
-  SoundImpl (const string& name); 
+  SoundImpl (const wxString& name); 
   bool isOk(); // Methoden muessen anscheinend spaeter definiert
   void play(); // werden. (sonst meckert der Compiler)
 };
 
 MinesPerfect::Sound*
-MinesPerfect::CreateSound (const string& name)
+MinesPerfect::CreateSound (const wxString& name)
 {
   return new SoundImpl(name);
 }
 
 //******************************************************************************
-SoundImpl::SoundImpl (const string& name) : wxWave()
+SoundImpl::SoundImpl (const wxString& name) : wxWave()
 //------------------------------------------------------------------------------
 {
-  string fname = "./sound/" + name + ".wav";
+  wxString fname = wxT("./sound/") + name + wxT(".wav");
 
   if (MinesPerfect::FileExist(fname))
-    wxWave::Create(fname.c_str());
+    wxWave::Create(fname);
 }
 
 //******************************************************************************
@@ -539,29 +539,29 @@ void MinesPerfect::DlgNewRecord (Options* options, int num_msecs, bool certified
 //------------------------------------------------------------------------------
 {
   // board_text
-  wxString  board_text("Board:  ");
+  wxString  board_text(wxT("Board:  "));
   board_text += options->getBoardName().c_str();
   
   // level_text
-  wxString  level_text("Level:  ");
+  wxString  level_text(wxT("Level:  "));
 
   if (options->getLevelNr() == BEGINNER)
-    level_text += "Beginner";
+    level_text += wxT("Beginner");
   else if (options->getLevelNr() == INTERMEDIATE)
-    level_text += "Intermediate";
+    level_text += wxT("Intermediate");
   else
-    level_text += "Expert";
+    level_text += wxT("Expert");
 
   // msg_text
-  wxString msg_text("You have a new record.\n\n");;
-  msg_text += board_text + "\n" + level_text;
+  wxString msg_text(wxT("You have a new record.\n\n"));;
+  msg_text += board_text + wxT("\n") + level_text;
   
   // rec_nr, old_name
   int       rec_nr = options->getLevelNr();
 //  wxString  old_name(options.getRecord(rec_nr).name.c_str());
 
   // user_vec
-  vector<string> user_vec;
+  vector<wxString> user_vec;
   options->getUserlist(user_vec);
 
   // user_list
@@ -571,11 +571,11 @@ void MinesPerfect::DlgNewRecord (Options* options, int num_msecs, bool certified
     user_list[k] = wxString(user_vec[k].c_str());
 
   // new_name (Dialog)
-  wxString                        new_name = (user_vec.size() > 0) ? user_list[0] : wxString("");
+  wxString                        new_name = (user_vec.size() > 0) ? user_list[0] : wxString(wxT(""));
   MinesPerfect::User::NameChecker checker;
 
   GenValidator       validator (&new_name, &checker);
-  ChooseComboDialog  dlg (main_win, msg_text, "Congratulations", 
+  ChooseComboDialog  dlg (main_win, msg_text, wxT("Congratulations"), 
                           user_vec.size(), user_list, validator);
 
   if (dlg.ShowModal() == wxID_OK)
@@ -649,11 +649,11 @@ void MinesPerfect::WinDrawBevel (const MinesPerfect::Rect& rect, int thickness, 
 }
 
 //******************************************************************************
-void MinesPerfect::FindFiles (vector<string>& files, const string& pattern)
+void MinesPerfect::FindFiles (vector<wxString>& files, const wxString& pattern)
 //------------------------------------------------------------------------------
 {
   wxString  fname;
-  wxDir     dir (".");
+  wxDir     dir (wxT("."));
 
   // Aufruf von dir.GetFirst oder dir.GetNext liefert einen Fehler 
   // (aber erst spaeter), falls das Verzeichnis nicht existiert.
@@ -661,7 +661,7 @@ void MinesPerfect::FindFiles (vector<string>& files, const string& pattern)
   // Ende, falls Verzeichnis nicht exist.
   unsigned i = pattern.rfind('/');
 
-  if (i != string::npos
+  if (i != wxString::npos
   &&  !wxDir::Exists (pattern.substr(0, i).c_str()))
       return;
 
@@ -676,14 +676,14 @@ void MinesPerfect::FindFiles (vector<string>& files, const string& pattern)
 }
 
 //******************************************************************************
-bool MinesPerfect::FileExist (const string& fname)
+bool MinesPerfect::FileExist (const wxString& fname)
 //------------------------------------------------------------------------------
 {
   return wxFile::Exists (fname.c_str());
 }
 
 //******************************************************************************
-void MinesPerfect::ShowMessageDlg (const string& text, const string& title)
+void MinesPerfect::ShowMessageDlg (const wxString& text, const wxString& title)
 //------------------------------------------------------------------------------
 {
   wxMessageDialog  dlg (main_win, text.c_str(), title.c_str(), wxOK);
@@ -691,17 +691,17 @@ void MinesPerfect::ShowMessageDlg (const string& text, const string& title)
 }
 
 //******************************************************************************
-bool MinesPerfect::StartBrowser (const string& protokoll, const string& fname)
+bool MinesPerfect::StartBrowser (const wxString& protokoll, const wxString& fname)
 //------------------------------------------------------------------------------
 {
   // ftype
   wxMimeTypesManager mime;
-  wxFileType*        ftype = mime.GetFileTypeFromExtension("html");
+  wxFileType*        ftype = mime.GetFileTypeFromExtension(wxT("html"));
   
   if (ftype == 0)
   {
-    wxMessageDialog  dlg (main_win, "There's no browser for html-files!", 
-                          "Error", wxOK | wxICON_ERROR);
+    wxMessageDialog  dlg (main_win, wxT("There's no browser for html-files!"), 
+                          wxT("Error"), wxOK | wxICON_ERROR);
     dlg.ShowModal();
     return false;
   }
@@ -709,10 +709,10 @@ bool MinesPerfect::StartBrowser (const string& protokoll, const string& fname)
   // mime_type
   wxString  mime_type;
   ftype->GetMimeType (&mime_type);
-  if (mime_type != "text/html")
+  if (mime_type != wxT("text/html"))
   {
-    wxMessageDialog  dlg (main_win, "Mimetype is wrong!", 
-                          "Error", wxOK | wxICON_ERROR);
+    wxMessageDialog  dlg (main_win, wxT("Mimetype is wrong!"), 
+                          wxT("Error"), wxOK | wxICON_ERROR);
     dlg.ShowModal();
     return false;
   }
@@ -723,14 +723,14 @@ bool MinesPerfect::StartBrowser (const string& protokoll, const string& fname)
 
   if (!ftype->GetOpenCommand(&command, params))
   {
-    wxMessageDialog  dlg (main_win, "Error in 'GetOpenCommand'", 
-                          "Error", wxOK | wxICON_ERROR);
+    wxMessageDialog  dlg (main_win, wxT("Error in 'GetOpenCommand'"), 
+                          wxT("Error"), wxOK | wxICON_ERROR);
     dlg.ShowModal();
     return false;
   }
 
-  if (protokoll != "file")
-    command.Replace("file://", wxString(protokoll.c_str()) + "://", false);
+  if (protokoll != wxT("file"))
+    command.Replace(wxT("file://"), wxString(protokoll.c_str()) + wxT("://"), false);
 
   // execute
   wxExecute (command);

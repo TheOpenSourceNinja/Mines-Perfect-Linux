@@ -17,7 +17,9 @@
 
 #include <string>
 #include <cstdlib>
-#include <sstream>
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
+#include <wx/sstream.h>
 #include <algorithm>
 
 #ifdef VISUAL_CPP
@@ -28,6 +30,8 @@
   #ifndef VISUAL_CPP
 //    #include <io.h>
   #endif
+#else
+  #include "linux-compatibility.h"
 #endif
 
 using namespace std;
@@ -99,19 +103,19 @@ struct BoardReadError
 {
   int     row;
   int     col;
-  string  text;
+  wxString  text;
 
-  BoardReadError (int r, int c, const string& t) : row(r), col(c), text(t)
+  BoardReadError (int r, int c, const wxString& t) : row(r), col(c), text(t)
   {;}
 };
 
 
 //******************************************************************************
-//  void MsgReadError (int col, int row, string text)
+//  void MsgReadError (int col, int row, wxString text)
 //------------------------------------------------------------------------------
 /*
 {
-  ostringstream  ost;
+  owxStringstream  ost;
 
   ost << "(" << col << ", " << row << "): " << text;
 
@@ -122,28 +126,28 @@ struct BoardReadError
 
 //******************************************************************************
   void Board::readChkVal (int    val,      int val_min, int    val_max,
-                          string obj_name, int obj_nr,  string obj_komp)
+                          wxString obj_name, int obj_nr,  wxString obj_komp)
 //------------------------------------------------------------------------------
 {
-  ostringstream  ost;
+  wxString ost;
 
-  ost << obj_name << "[" << obj_nr << "]" << "." << obj_komp
-      << " = " << val << " : ";
+  ost << obj_name << wxT("[") << obj_nr << wxT("]") << wxT(".") << obj_komp
+      << wxT(" = ") << val << wxT(" : ");
 
   if (val < val_min)
   {
-    ost << "too small (" << "< " << val_min << ")";
-    throw BoardReadError (-1, -1, (char*) ost.str().c_str());
+    ost << wxT("too small (") << wxT("< ") << val_min << wxT(")");
+    throw BoardReadError (-1, -1, ost);
   }
   else if (val > val_max)
   {
-    ost << "too large (" << "> " << val_max << ")";
-    throw BoardReadError (-1, -1, (char*) ost.str().c_str());
+    ost << wxT("too large (") << wxT("> ") << val_max << wxT(")");
+    throw BoardReadError (-1, -1, ost);
   }
 }
 
 //******************************************************************************
-  void Board::read (string fname, Level& lvl)
+  void Board::read (wxString fname, Level& lvl)
 //------------------------------------------------------------------------------
 {
   enum
@@ -163,16 +167,20 @@ struct BoardReadError
     int  vy;
   }                    tile;
   vector<CellPattern>  cell_patterns;
-  ifstream             in (fname.c_str());
+  
+  wxFileInputStream             inFile (fname);
+  
 //  ofstream             out ("read.txt");
-  string               line, word;
+  wxString               line, word;
   int                  file_row, file_col;
   int                  block_row = -1, block_col = -1;
   int                  val;
-  string::size_type    p1, p2;
+  wxString::size_type    p1, p2;
 
-  if (in == 0)
+  if (!inFile.IsOk())
     return;
+  
+  wxTextInputStream             inText (inFile);
 
   levels.clear();
   frame_types.clear();
@@ -186,40 +194,40 @@ struct BoardReadError
   //----------------------------------------------------------------------------
   // Einlesen
   //----------------------------------------------------------------------------
-  while (!in.eof())
+  while (!inFile.Eof())
   {
-    getline (in, line);
+    line = inText.ReadLine();
     ++file_row;
 
     p2 = 0;
     while (true)
     {
       // word
-      p1 = line.find_first_not_of (" \t", p2);
-      if (p1 == string::npos
+      p1 = line.find_first_not_of (wxT(" \t"), p2);
+      if (p1 == wxString::npos
       ||  p1 >= line.size())  // Fehler von Borland!!
         break;
 
-      p2 = line.find_first_of (" \t", p1 + 1);
+      p2 = line.find_first_of (wxT(" \t"), p1 + 1);
 
       word     = line.substr (p1, p2 - p1);
       file_col = p1 + 1;
 
-      if (word == "//")
+      if (word == wxT("//"))
         break;
 
       // block_type
-      if (p1 == 0 && line[0] == '<')
+      if (p1 == 0 && line[0] == wxT('<'))
       {
-        if      (word == "<levels>"       )  block_type = BLOCK_LEVELS;
-        else if (word == "<frame-types>"  )  block_type = BLOCK_FRAME_TYPES;
-        else if (word == "<cell-types>"   )  block_type = BLOCK_CELL_TYPES;
-        else if (word == "<cell-patterns>")  block_type = BLOCK_CELL_PATTERNS;
-        else if (word == "<tile>"         )  block_type = BLOCK_TILE;
+        if      (word == wxT("<levels>")       )  block_type = BLOCK_LEVELS;
+        else if (word == wxT("<frame-types>")  )  block_type = BLOCK_FRAME_TYPES;
+        else if (word == wxT("<cell-types>")   )  block_type = BLOCK_CELL_TYPES;
+        else if (word == wxT("<cell-patterns>"))  block_type = BLOCK_CELL_PATTERNS;
+        else if (word == wxT("<tile>")         )  block_type = BLOCK_TILE;
         else
         {
           block_type = BLOCK_INVALID;
-          throw BoardReadError (file_row, file_col, "invalid titel!");
+          throw BoardReadError (file_row, file_col, wxT("invalid titel!"));
         }
 
         block_row = -1;
@@ -228,14 +236,14 @@ struct BoardReadError
       }
 
       // val
-      if ((word[0] < '0' || '9' < word[0]) && word[0] != '-')
-        throw BoardReadError (file_row, file_col, "invalid number!");
+      if ((word[0] < wxT('0') || wxT('9') < word[0]) && word[0] != wxT('-'))
+        throw BoardReadError (file_row, file_col, wxT("invalid number!"));
 
       if (word.size() >= 2
-      && (word[1] < '0' || '9' < word[1]))
-        throw BoardReadError (file_row, file_col + 1, "invalid number!");
+      && (word[1] < wxT('0') || wxT('9') < word[1]))
+        throw BoardReadError (file_row, file_col + 1, wxT("invalid number!"));
 
-      val = atoi (word.c_str());
+      val = strToInt (word);
 
       // block_row, block_col
       if (p1 == 0)
@@ -248,17 +256,17 @@ struct BoardReadError
 
       if (block_row < 0)
         throw BoardReadError (file_row, file_col,
-                                "1st number must be in the 1st column!");
+                                wxT("1st number must be in the 1st column!"));
 
       // Level
       if (block_type == BLOCK_LEVELS)
       {
         if (block_row > 2)
           throw BoardReadError (file_row, file_col,
-                                  "too many levels!");
+                                  wxT("too many levels!"));
         else if (block_col > 3)
           throw BoardReadError (file_row, file_col,
-                                  "too many numbers in line!");
+                                  wxT("too many numbers in line!"));
 
         else if (block_col == 0)
         {
@@ -283,7 +291,7 @@ struct BoardReadError
         else if (block_col == 2)  frame_types.back().width  = val;
         else if (block_col == 3)  frame_types.back().height = val;
         else if (block_col == 4)  throw BoardReadError (file_row, file_col,
-                                               "too many numbers in line!");
+                                               wxT("too many numbers in line!"));
       }
       // Cell-Type
       else if (block_type == BLOCK_CELL_TYPES)
@@ -340,10 +348,10 @@ struct BoardReadError
       {
         if (block_row > 0)
           throw BoardReadError (file_row, file_col,
-                                  "too many tiles!");
+                                  wxT("too many tiles!"));
         else if (block_col > 4)
           throw BoardReadError (file_row, file_col,
-                                  "too many numbers in line!");
+                                  wxT("too many numbers in line!"));
 
         else if (block_col == 0)       tile.hx = val;
         else if (block_col == 1)       tile.hy = val;
@@ -352,7 +360,7 @@ struct BoardReadError
       }
 
       //
-      if (p2 == string::npos)
+      if (p2 == wxString::npos)
         break;
     }
   }
@@ -363,14 +371,14 @@ struct BoardReadError
 
   // Check Level
   if (levels.size() < 3)
-    throw BoardReadError (-1, -1, "too few levels!");
+    throw BoardReadError (-1, -1, wxT("too few levels!"));
 
   for (unsigned i = 0; i < levels.size(); i++)
   {
-    readChkVal (levels[i].height,      1,   999, "level", i, "height");
-    readChkVal (levels[i].width,       1,   999, "level", i, "width");
-    readChkVal (levels[i].num_mines,   0, 99999, "level", i, "mines");
-    readChkVal (levels[i].num_wholes, -1, 99999, "level", i, "wholes");
+    readChkVal (levels[i].height,      1,   999, wxT("level"), i, wxT("height"));
+    readChkVal (levels[i].width,       1,   999, wxT("level"), i, wxT("width"));
+    readChkVal (levels[i].num_mines,   0, 99999, wxT("level"), i, wxT("mines"));
+    readChkVal (levels[i].num_wholes, -1, 99999, wxT("level"), i, wxT("wholes"));
   }
 
 //  // Check Frame-Type
@@ -380,35 +388,35 @@ struct BoardReadError
   { // visual studio
     for (unsigned i = 0; i < frame_types.size(); i++)
     {
-      readChkVal (frame_types[i].x,      0, 1599, "frame-type", i, "x");
-      readChkVal (frame_types[i].y,      0, 1199, "frame-type", i, "y");
-      readChkVal (frame_types[i].width,  0, 1599, "frame-type", i, "width");
-      readChkVal (frame_types[i].height, 0, 1199, "frame-type", i, "height");
+      readChkVal (frame_types[i].x,      0, 1599, wxT("frame-type"), i, wxT("x"));
+      readChkVal (frame_types[i].y,      0, 1199, wxT("frame-type"), i, wxT("y"));
+      readChkVal (frame_types[i].width,  0, 1599, wxT("frame-type"), i, wxT("width"));
+      readChkVal (frame_types[i].height, 0, 1199, wxT("frame-type"), i, wxT("height"));
     }
   } // visual studio
 
   // Check Cell-Type
   if (cell_types.size() <= 0)
-    throw BoardReadError (-1, -1, "no cell-types!");
+    throw BoardReadError (-1, -1, wxT("no cell-types!"));
 
   { // visual studio
     for (unsigned i = 0; i < cell_types.size(); i++)
     {
-      readChkVal (cell_types[i].x,        0, 1599, "cell-type", i, "x");
-      readChkVal (cell_types[i].y,        0, 1199, "cell-type", i, "y");
-      readChkVal (cell_types[i].width,    0, 1599, "cell-type", i, "width");
-      readChkVal (cell_types[i].height,   0, 1199, "cell-type", i, "height");
-      readChkVal (cell_types[i].centre_x, 0, 1599, "cell-type", i, "centre_x");
-      readChkVal (cell_types[i].centre_y, 0, 1199, "cell-type", i, "centre_y");
+      readChkVal (cell_types[i].x,        0, 1599, wxT("cell-type"), i, wxT("x"));
+      readChkVal (cell_types[i].y,        0, 1199, wxT("cell-type"), i, wxT("y"));
+      readChkVal (cell_types[i].width,    0, 1599, wxT("cell-type"), i, wxT("width"));
+      readChkVal (cell_types[i].height,   0, 1199, wxT("cell-type"), i, wxT("height"));
+      readChkVal (cell_types[i].centre_x, 0, 1599, wxT("cell-type"), i, wxT("centre_x"));
+      readChkVal (cell_types[i].centre_y, 0, 1199, wxT("cell-type"), i, wxT("centre_y"));
 
       for (unsigned j = 0; j < cell_types[i].frames.size(); j++)
       {
         readChkVal (cell_types [i].frames[j].type_nr, 0, frame_types.size() - 1,
-                   "cell-types",i,"frames[?].type_nr");
+                   wxT("cell-types"),i,wxT("frames[?].type_nr"));
         readChkVal (cell_types [i].frames[j].x, -1599, 1599,
-                   "cell-types",i,"frames[?].x");
+                   wxT("cell-types"),i,wxT("frames[?].x"));
         readChkVal (cell_types [i].frames[j].y, -1199, 1199,
-                   "cell-types",i,"frames[?].y");
+                   wxT("cell-types"),i,wxT("frames[?].y"));
       }
     }
   } // visual studio
@@ -416,41 +424,41 @@ struct BoardReadError
 
   // Check Cell-Pattern
   if (cell_patterns.size() <= 0)
-    throw BoardReadError (-1, -1, "no cell-patterns!");
+    throw BoardReadError (-1, -1, wxT("no cell-patterns!"));
 
   { // visual studio
     for (unsigned i = 0; i < cell_patterns.size(); i++)
     {
       readChkVal (cell_patterns [i].row, 0, 999,
-                 "cell-patterns",i,"row");
+                 wxT("cell-patterns"),i,wxT("row"));
       readChkVal (cell_patterns [i].col, 0, 999,
-                 "cell-patterns",i,"col");
+                 wxT("cell-patterns"),i,wxT("col"));
       readChkVal (cell_patterns [i].type_nr, 0, cell_types.size() - 1,
-                 "cell-patterns",i,"type_nr");
+                 wxT("cell-patterns"),i,wxT("type_nr"));
       readChkVal (cell_patterns [i].x, 0, 1599,
-                 "cell-patterns",i,"x");
+                 wxT("cell-patterns"),i,wxT("x"));
       readChkVal (cell_patterns [i].y, 0, 1199,
-                 "cell-patterns",i,"y");
+                 wxT("cell-patterns"),i,wxT("y"));
       readChkVal (cell_patterns [i].cond, 1, 777,
-                 "cell-patterns",i,"cond");
+                 wxT("cell-patterns"),i,wxT("cond"));
 
       for (unsigned j = 0; j < cell_patterns[i].adj.size(); j++)
       {
         readChkVal (cell_patterns [i].adj[j].nr, 0, cell_patterns.size() - 1,
-                   "cell-patterns",i,"adj[?].nr");
+                   wxT("cell-patterns"),i,wxT("adj[?].nr"));
         readChkVal (cell_patterns [i].adj[j].tile_dv, -999, 999,
-                   "cell-patterns",i,"adj[?].tile_dv");
+                   wxT("cell-patterns"),i,wxT("adj[?].tile_dv"));
         readChkVal (cell_patterns [i].adj[j].tile_dh, -999, 999,
-                   "cell-patterns",i,"adj[?].tile_dh");
+                   wxT("cell-patterns"),i,wxT("adj[?].tile_dh"));
       }
     }
   } // visual studio
 
   // Check Tile
-  readChkVal (tile.hx, 0, 1599, "tile", 0, "hx");
-  readChkVal (tile.hy, 0, 1199, "tile", 0, "hy");
-  readChkVal (tile.vx, 0, 1599, "tile", 0, "vx");
-  readChkVal (tile.vy, 0, 1199, "tile", 0, "vy");
+  readChkVal (tile.hx, 0, 1599, wxT("tile"), 0, wxT("hx"));
+  readChkVal (tile.hy, 0, 1199, wxT("tile"), 0, wxT("hy"));
+  readChkVal (tile.vx, 0, 1599, wxT("tile"), 0, wxT("vx"));
+  readChkVal (tile.vy, 0, 1199, wxT("tile"), 0, wxT("vy"));
 
   //----------------------------------------------------------------------------
   // auswerten
@@ -561,18 +569,19 @@ struct BoardReadError
   int num_valid_cells = wholes.size();
 
   if (num_valid_cells == 0)
-    throw BoardReadError (-1, -1, "Boardsize too small - no valid cells!");
+    throw BoardReadError (-1, -1, wxT("Boardsize too small - no valid cells!"));
 
   if (lvl.num_wholes >= num_valid_cells)
   {
     if (lvl.nr < (int) levels.size())
     {
-      ostringstream  ost;
+      wxStringOutputStream strstream;
+      wxTextOutputStream  ost(strstream);
 
-      ost << "level[" << lvl.nr << "].wholes = " << lvl.num_wholes
-          << " : too big (>= " << num_valid_cells << ")";
+      ost << wxT("level[") << lvl.nr << wxT("].wholes = ") << lvl.num_wholes
+          << wxT(" : too big (>= ") << num_valid_cells << wxT(")");
 
-      throw BoardReadError (-1, -1, (char*) ost.str().c_str());
+      throw BoardReadError (-1, -1, strstream.GetString());
     }
 
     lvl.num_wholes = num_valid_cells - 1;
@@ -584,12 +593,13 @@ struct BoardReadError
   {
     if (lvl.nr < (int) levels.size())
     {
-      ostringstream  ost;
+      wxStringOutputStream strstream;
+      wxTextOutputStream  ost(strstream);
 
-      ost << "level[" << lvl.nr << "].mines = " << lvl.num_mines
-          << " : too big (>= " << num_cells_remain << ")";
+      ost << wxT("level[") << lvl.nr << wxT("].mines = ") << lvl.num_mines
+          << wxT(" : too big (>= ") << num_cells_remain << wxT(")");
 
-      throw BoardReadError (-1, -1, (char*) ost.str().c_str());
+      throw BoardReadError (-1, -1, strstream.GetString());
     }
 
     lvl.num_mines = num_cells_remain - 1;
@@ -651,7 +661,7 @@ struct BoardReadError
   } // visual studio
 
   //
-  readChkVal (cells.size(), 1, 9999, "cells.size", 0, "");
+  readChkVal (cells.size(), 1, 9999, wxT("cells.size"), 0, wxT(""));
 
   // Frames
   for (int ft = 0; ft < (int) frame_types.size(); ft++)
@@ -1654,7 +1664,7 @@ struct BoardReadError
         test_board.solveAllBase (test_board.max_stage, cc, logbook);
 
         // max_stage runtersetzen, bis ein Zug gefunden wurde (Zeit sparen)
-        // Dies soll verhindern, daß in einer Situation, in der mehrere Zellen
+        // Dies soll verhindern, dass in einer Situation, in der mehrere Zellen
         // geoeffnet oder markiert werden muessen, jedesmal eine Komplett-
         // rechnung durchgefuehrt wird.
         // Allerdings bewirkt dies, dass u.U. mehr Hinweise als noetig gegeben
@@ -1740,7 +1750,7 @@ struct BoardReadError
     while (!gameOver() && poss_move_stage <= auto_stage);
   }
 
-  if (modus != HINTS) // aus Optimierungsgründen
+  if (modus != HINTS) // aus Optimierungsgruenden
   {
     if (auto_stage > 0)
     {
@@ -1822,10 +1832,10 @@ struct BoardReadError
 {
   Level  lvl = opt.getLevel();
 
-  if (FileExist (string("./boards/") + opt.getBoardName() + ".bmp")
-  &&  FileExist (string("./boards/") + opt.getBoardName() + ".txt"))
+  if (FileExist (wxString(wxT("./boards/")) + opt.getBoardName() + wxT(".bmp"))
+  &&  FileExist (wxString(wxT("./boards/")) + opt.getBoardName() + wxT(".txt")))
   {
-    string  fname = string("./boards/") + opt.getBoardName() + ".txt";
+    wxString  fname = wxString(wxT("./boards/")) + opt.getBoardName() + wxT(".txt");
 
     try
     {
@@ -1833,28 +1843,29 @@ struct BoardReadError
     }
     catch (BoardReadError err)
     {
-      ostringstream  ost;
+      wxStringOutputStream strstream;
+      wxTextOutputStream  ost(strstream);
 
-      ost << "Error in: " << fname;
+      ost << wxT("Error in: ") << fname;
 
       if (err.col >= 0 && err.row >= 0)
-        ost << "(" << err.row << "," << err.col << ")";
+        ost << wxT("(") << err.row << wxT(",") << err.col << wxT(")");
 
 //      Application->MessageBox ((char*) err.text.c_str(),
 //                               (char*) ost.str().c_str(),
 //                                MB_OK + MB_DEFBUTTON1);
 //      SetSquare (lvl);
 
-      throw Exception ((err.text + "\n" + ost.str()).c_str());
+      throw Exception ((err.text + wxT("\n")) + strstream.GetString());
     }
   }
-  else if (opt.getBoardName() == "Square")
+  else if (opt.getBoardName() == wxT("Square"))
     setSquare (lvl);
-  else if (opt.getBoardName() == "Hexagon")
+  else if (opt.getBoardName() == wxT("Hexagon"))
     setHexagon (lvl);
-  else if (opt.getBoardName() == "Triangle")
+  else if (opt.getBoardName() == wxT("Triangle"))
     setTriangle (lvl);
-  else if (opt.getBoardName() == "3d-Grid")
+  else if (opt.getBoardName() == wxT("3d-Grid"))
     set3dGrid (lvl);
 
   // Variablen setzen

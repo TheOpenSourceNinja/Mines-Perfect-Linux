@@ -73,8 +73,8 @@ class GameCtrl : public Ctrl
     Options*  getOptions()        { return m_options; }
 
     void actWin();
-    void load (const string& fname);
-    void save (const string& fname);
+    void load (const wxString& fname);
+    void save (const wxString& fname);
     void undo (bool all);
     void redo();
     void onMouseEvent (const MouseEvent& ev);

@@ -29,9 +29,9 @@ namespace MinesPerfect
 #include <iterator>
 #include <iomanip>
 
-#ifdef VISUAL_CPP
-  #include <math.h> // visual studio
-#endif
+//#ifdef VISUAL_CPP
+  #include <math.h>
+//#endif
 
 using namespace std;
 

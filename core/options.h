@@ -60,29 +60,29 @@ typedef int  StageNr;
   struct Record
 //------------------------------------------------------------------------------
 {
-  string  name;
+  wxString  name;
   int     time;
   bool    certified_board;
   bool    was_send;
   time_t  date;
 
-  void reset() { name = "Anonymous"; time = MAX_MSECS; date = 0;
+  void reset() { name = wxT("Anonymous"); time = MAX_MSECS; date = 0;
                  certified_board = false; was_send = false; }
   Record() { reset(); }
 };
 
 //******************************************************************************
-  struct StringChecker //: public string
+  struct StringChecker //: public wxString
 //------------------------------------------------------------------------------
 {
   public:
 
-    virtual bool isValidChar   (char          ch,  string* errtext = 0) = 0;
-    bool         isValidString (const string& str, string* errtext = 0);
+    virtual bool isValidChar   (char          ch,  wxString* errtext = 0) = 0;
+    bool         isValidString (const wxString& str, wxString* errtext = 0);
 
   protected:
 
-    virtual bool isValidStringBase (const string& str, string* errtext = 0) = 0;
+    virtual bool isValidStringBase (const wxString& str, wxString* errtext = 0) = 0;
 };
 
 //******************************************************************************
@@ -93,30 +93,30 @@ typedef int  StageNr;
 
   struct NameChecker : public StringChecker
   {
-      bool isValidChar       (char ch,           string* errtext = 0);
-      bool isValidStringBase (const string& str, string* errtext = 0);
+      bool isValidChar       (char ch,           wxString* errtext = 0);
+      bool isValidStringBase (const wxString& str, wxString* errtext = 0);
   };
 
   struct PasswordChecker : public StringChecker
   {
-      bool isValidChar       (char ch,           string* errtext = 0);
-      bool isValidStringBase (const string& str, string* errtext = 0);
+      bool isValidChar       (char ch,           wxString* errtext = 0);
+      bool isValidStringBase (const wxString& str, wxString* errtext = 0);
   };
 
-  string name;
-  string password;
+  wxString name;
+  wxString password;
 };
 
 //******************************************************************************
   struct BoardType
 //------------------------------------------------------------------------------
 {
-  string  name;
+  wxString  name;
   bool    enabled;
   Record  records[3];
 
   BoardType() : enabled(true) {;}
-  BoardType (string n) : name(n), enabled(true) {;}
+  BoardType (wxString n) : name(n), enabled(true) {;}
   
   void deleteRecord(int nr) { if (0 <= nr && nr <= 2) records[nr].reset(); }
   void deleteRecords();
@@ -153,7 +153,7 @@ public:
   bool   loadIni();
   void   saveIni();
   void   deleteRecords();
-  void   addBoard (string n) { board_types.push_back (BoardType (n)); }
+  void   addBoard (wxString n) { board_types.push_back (BoardType (n)); }
   void   actBoards();
   
   // set
@@ -169,8 +169,8 @@ public:
   void   setMaxStage   (StageNr  stg) { max_stage   = stg; }
   void   setShowMines  (bool  show)   { show_mines  = show; }
   void   addUser       (const User& new_user) { users.push_back(new_user); }
-  void   renameUser    (const string& old_name, const string& new_name); 
-  void   setRecord     (int nr, string name, int time, bool certified_board);
+  void   renameUser    (const wxString& old_name, const wxString& new_name); 
+  void   setRecord     (int nr, wxString name, int time, bool certified_board);
 
 
   // get
@@ -195,11 +195,11 @@ public:
   int         getNumUsers()   const { return users.size(); }
   User        getUser(int nr) const { return users[nr]; }
 
-  const string  getBoardName (BoardNr nr) const;
+  const wxString  getBoardName (BoardNr nr) const;
   
   BoardType*  getBoardType (BoardNr nr);
 
-  const string  getBoardName (void) const {
+  const wxString  getBoardName (void) const {
     return getBoardName (board_nr);
   }
 
@@ -211,9 +211,9 @@ public:
     return board_types[board_nr].records[nr];
   }
 
-  void getUserlist(vector<string>& user_list);
+  void getUserlist(vector<wxString>& user_list);
 
-  int findBoardNr (const string& name);
+  int findBoardNr (const wxString& name);
 };
 
 

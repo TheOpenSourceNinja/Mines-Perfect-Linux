@@ -126,14 +126,14 @@ class Exception
 {
 public:
 
-  Exception ()                     { text = ""; }
-  Exception (const std::string& t) { text = t; }
+  Exception ()                     { text = wxT(""); }
+  Exception (const wxString& t) { text = t; }
 
-  std::string  getText() const { return text; }
+  wxString  getText() const { return text; }
 
 protected:
 
-  std::string  text;
+  wxString  text;
 };
 
 //******************************************************************************
@@ -146,7 +146,7 @@ public:
 };
 
 //******************************************************************************
-std::string Lower (const std::string& s);
+wxString Lower (const wxString& s);
 
 } // namespace MinesPerfect
 

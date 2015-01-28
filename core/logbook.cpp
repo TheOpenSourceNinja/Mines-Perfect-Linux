@@ -28,6 +28,10 @@
 
 using namespace std;
 
+#ifdef LINUX
+  #include "linux-compatibility.h"
+#endif
+
 #include "logbook.h"
 #include "api.h"  // Exception
 
@@ -45,10 +49,12 @@ using namespace MinesPerfect;
 const char*  AUTO_LOG_FNAME = "auto.log";
 
 //******************************************************************************
-void Log::write (const string& fname) const
+void Log::write (const wxString& fname) const
 //------------------------------------------------------------------------------
 {
-  ofstream  out (fname.c_str(), ios::out | ios::app);
+  wxFileOutputStream outFile(wxFile(fname, wxFile::write_append));
+  wxTextOutputStream out(outFile);
+  //ofstream  out (fname.c_str(), ios::out | ios::app);
 
   if (!out)
     throw LogException (("Log::write(): " + fname
@@ -166,7 +172,7 @@ const Log& Logbook::getPlayLog() const
 }
 
 //******************************************************************************
-void Logbook::writeOptions (const string& fname) const
+void Logbook::writeOptions (const wxString& fname) const
 //------------------------------------------------------------------------------
 {
   ofstream  out (fname.c_str());
@@ -195,7 +201,7 @@ void Logbook::writeOptions (const string& fname) const
 }
 
 //******************************************************************************
-void Logbook::write (const string& fname)
+void Logbook::write (const wxString& fname)
 //------------------------------------------------------------------------------
 // Schreiben eines Logfiles
 {
@@ -206,12 +212,12 @@ void Logbook::write (const string& fname)
 }
 
 //******************************************************************************
-void Logbook::read (const string& fname)
+void Logbook::read (const wxString& fname)
 //------------------------------------------------------------------------------
 // Lesen eines Logfiles
 {
   if (fname == AUTO_LOG_FNAME)
-    throw LogException ((string ("Logbook::read(): ") + AUTO_LOG_FNAME
+    throw LogException ((wxString ("Logbook::read(): ") + AUTO_LOG_FNAME
                        + " isn't allowed to read.").c_str());
 
   ifstream  in (fname.c_str());
@@ -228,13 +234,13 @@ void Logbook::read (const string& fname)
   while (!in.eof())
   {
     // str1, str2, str3
-    string str1, str2, str3;
+    wxString str1, str2, str3;
     
     in >> str1;
     if (str1.size() == 0)
       break;
     else if (in.eof())
-      throw LogException (string("Logbook::read(1): Number of entries must be a "
+      throw LogException (wxString("Logbook::read(1): Number of entries must be a "
                                  "multiple of three. (") + str1 + ")");
     in >> str2;
     if (in.eof())
@@ -244,8 +250,8 @@ void Logbook::read (const string& fname)
     in >> str3;
  
     // log
-    if (str1.find_first_not_of ("0123456789!") != string::npos)
-      throw LogException (string("Logbook::read: '") + str1 + "' must not contains non-digits.");
+    if (str1.find_first_not_of ("0123456789!") != wxString::npos)
+      throw LogException (wxString("Logbook::read: '") + str1 + "' must not contains non-digits.");
    
     log.time1 = atoi (str1.c_str());
     log.name = str2;
@@ -255,12 +261,12 @@ void Logbook::read (const string& fname)
       log.val = options.findBoardNr(str3);
           
       if (log.val == -1)
-        throw LogException (string("Logbook::read: board '") + str3 + "' not found!");
+        throw LogException (wxString("Logbook::read: board '") + str3 + "' not found!");
     }
     else
     {
-      if (str3.find_first_not_of ("-0123456789!") != string::npos)
-        throw LogException (string("Logbook::read: '") + str3 + "' must not contains non-digits.");
+      if (str3.find_first_not_of ("-0123456789!") != wxString::npos)
+        throw LogException (wxString("Logbook::read: '") + str3 + "' must not contains non-digits.");
         
       log.val = atoi (str3.c_str());   
     }
@@ -283,7 +289,7 @@ void Logbook::read (const string& fname)
       else if (log.name == LOG_SHOW_MINES)  options.setShowMines  (log.val != 0);
       else if (log.name != LOG_VERSION && log.name != LOG_VARIANT
            &&  log.name != LOG_BOARD_CHKSUM)
-        throw LogException (string("Logbook::read: '") + log.name + "' not recognize.");
+        throw LogException (wxString("Logbook::read: '") + log.name + "' not recognize.");
     }
     else
     {
@@ -359,7 +365,7 @@ void Logbook::operator<< (const Log& log)
     // Waehrend eines Abspielens duerfen nur Out-Of-Time und Start-Timer
     // Logs geschrieben werden!
     if (!logs[play_index].isComputerLog())
-      throw LogException (string("logs[].name == '") + logs[play_index].name 
+      throw LogException (wxString("logs[].name == '") + logs[play_index].name 
                          + "' invalid!");
     // Kommen Computerlogs in der selben Reihenfolge?  
     else if (logs[play_index].name != log2.name)
@@ -391,7 +397,7 @@ void Logbook::operator<< (const Log& log)
     }
 
     if (log2.time1 == 0)
-      log2.time1 = 1;   // 0 wird für die Startoptionen benutzt
+      log2.time1 = 1;   // 0 wird fuer die Startoptionen benutzt
 
     if (Glob::log_on)
       log2.write (AUTO_LOG_FNAME);
@@ -519,7 +525,7 @@ bool Logbook::redo (Log& log)
 
   // cur_index muss immer auf einem gueltigen stehen
   if (!log.valid || log.isComputerLog())
-    throw LogException (string("Logbook::redo(): invalid log! (") + log.name + "')");
+    throw LogException (wxString("Logbook::redo(): invalid log! (") + log.name + "')");
 
   // cur_index wird auf den naechsten freien oder den naechsten gueltigen Log
   // gesetzt.  
@@ -578,11 +584,11 @@ int Logbook::CharToInt6 (char ch) const
 }
 
 //******************************************************************************
-string Logbook::exportStr () const
+wxString Logbook::exportStr () const
 //------------------------------------------------------------------------------
 {
-  string    func_name = "Logbook::exportStr: ";
-  string    text;
+  wxString    func_name = "Logbook::exportStr: ";
+  wxString    text;
   char      buf[20]; // fuer atoi
   unsigned  i;
   char      sep = ',';
@@ -697,18 +703,18 @@ string Logbook::exportStr () const
 }
 
 //******************************************************************************
-void Logbook::importStr (const string& text)
+void Logbook::importStr (const wxString& text)
 //------------------------------------------------------------------------------
 {
-  string func_name = "Logbook::importStr: ";
+  wxString func_name = "Logbook::importStr: ";
 
   //--- stat. Informationen ---
 
   // parts
-  string::size_type  p1, p2;
-  vector<string>     parts;
+  wxString::size_type  p1, p2;
+  vector<wxString>     parts;
 
-  for (p1 = p2 = 0; p2 != string::npos; p1 = p2 + 1)
+  for (p1 = p2 = 0; p2 != wxString::npos; p1 = p2 + 1)
   {
     p2 = text.find (',', p1);
 
@@ -775,7 +781,7 @@ void Logbook::importStr (const string& text)
 
   //--- dyn. Informationen ---
 
-  string log_data = parts[i++];
+  wxString log_data = parts[i++];
 
   if (i != parts.size())
     throw LogException (func_name + "too much parts.");
