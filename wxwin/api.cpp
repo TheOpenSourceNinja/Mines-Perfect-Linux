@@ -61,6 +61,10 @@
   };
 #endif
 
+#ifdef LINUX
+#include "../core/linux-compatibility.h"
+#endif
+
 #include "../gui/gamectrl.h"
 #include "../core/api.h"
 #include "app.h"
@@ -106,8 +110,8 @@ void SetBitmapBackgroundColour()
 
   wxImage img1(1,1);
   img1.SetRGB (0, 0, col.Red(), col.Green(), col.Blue());
-
-  wxImage img2 (img1.ConvertToBitmap());
+  
+  wxImage img2 = wxBitmap( img1 ).ConvertToImage();
 
   red   = img2.GetRed(0,0);  
   green = img2.GetGreen(0,0);
@@ -161,8 +165,8 @@ void SetImage (wxImage& image, char* xpm[], bool transparent)
 //  als Transparentfarbe wird das Pixel links unten genommen
 {
   ASSERT (xpm != 0);
-
-  image = wxImage(wxBitmap(xpm));
+  
+  image = wxBitmap( xpm ).ConvertToImage();
 
   // replace
   wxColour win_bg_col = main_win->GetBackgroundColour();
@@ -306,8 +310,8 @@ BitmapImpl::BitmapImpl (const string& kind, const string& spec)
     else if (spec == "3d-Grid")               image = grid3d_image;
     else      
       ASSERT (false);
-
-    bitmap = image.ConvertToBitmap();
+    
+    bitmap = wxBitmap( image );
     return;
   }
 
@@ -382,7 +386,7 @@ BitmapImpl::BitmapImpl (const string& kind, const string& spec)
 
   // check
   ASSERT (nr >= 0 && nr < num_rows * num_cols);
-  ASSERT (num_rows > 0 && num_cols > 0 && image != 0);
+  ASSERT (num_rows > 0 && num_cols > 0 ); //&& image != 0);
 
   // bmp
   int i = nr / num_cols;
@@ -393,7 +397,7 @@ BitmapImpl::BitmapImpl (const string& kind, const string& spec)
   wxRect  rect (j * w, i * h, w, h);
 
   image  = image.GetSubImage (rect);
-  bitmap = image.ConvertToBitmap();
+  bitmap = wxBitmap( image );
 }
 
 //******************************************************************************
@@ -407,7 +411,7 @@ BitmapImpl::BitmapImpl (const MinesPerfect::Bitmap* from, const MinesPerfect::Re
   ASSERT (from2 != 0);
   
   image  = from2->image.GetSubImage(rect2);
-  bitmap = image.ConvertToBitmap();
+  bitmap = wxBitmap( image );
 }
 
 //******************************************************************************
