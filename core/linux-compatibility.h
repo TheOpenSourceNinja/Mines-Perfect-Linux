@@ -19,8 +19,28 @@
 #ifndef LINUX_COMPATIBILITY_H_INCLUDED
 #define LINUX_COMPATIBILITY_H_INCLUDED
 
+#include <stdio.h>
 #include <time.h>
 
 #define CLK_TCK CLOCKS_PER_SEC
+
+char* itoa( int value, char* str, int base) {
+	switch( base ) {
+		case 10: {
+			sprintf( str, "%d", value );
+			break;
+		}
+		case 16: {
+			sprintf( str, "%x", value );
+			break;
+		}
+		case 8:{
+			sprintf( str, "%o", value );
+			break;
+		}
+		default: break;
+	}
+	return str;
+}
 
 #endif
