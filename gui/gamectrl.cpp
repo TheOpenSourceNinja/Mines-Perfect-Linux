@@ -62,13 +62,13 @@ using namespace MinesPerfect;
 void GameCtrl::initSound()
 //------------------------------------------------------------------------------
 {
-  m_open_sound    = CreateSound ("open");
-  m_flag_sound    = CreateSound ("flag");
-  m_error_sound   = CreateSound ("error");
-  m_new_sound     = CreateSound ("new");
-  m_won_sound     = CreateSound ("won");
-  m_lost_sound    = CreateSound ("lost");
-  m_deadend_sound = CreateSound ("deadend");
+  m_open_sound    = CreateSound (wxT("open"));
+  m_flag_sound    = CreateSound (wxT("flag"));
+  m_error_sound   = CreateSound (wxT("error"));
+  m_new_sound     = CreateSound (wxT("new"));
+  m_won_sound     = CreateSound (wxT("won"));
+  m_lost_sound    = CreateSound (wxT("lost"));
+  m_deadend_sound = CreateSound (wxT("deadend"));
 }
 
 //******************************************************************************
@@ -756,29 +756,29 @@ void GameCtrl::playLogbook()
 }
 
 //******************************************************************************
-void GameCtrl::load (const string& fname)
+void GameCtrl::load (const wxString& fname)
 //------------------------------------------------------------------------------
 {
   // load
   try
   {
-    if (fname.find(',') == string::npos) 
+    if (fname.find(',') == wxString::npos) 
     {
       m_logbook->read (fname);
     }
     else
     {
-      string fname2 = fname;
+      wxString fname2 = fname;
 
       // Der Dateioeffnendialog fuegt am Anfang noch den
       // Pfad und am Ende eine Extension an, diese muessen
       // jetzt wieder entfernt werden
-      string::size_type i = fname2.rfind('\\');
-      if (i != string::npos)
+      wxString::size_type i = fname2.rfind('\\');
+      if (i != wxString::npos)
         fname2 = fname2.substr(i + 1);
 
       i = fname2.rfind('.');
-      if (i != string::npos)
+      if (i != wxString::npos)
         fname2 = fname2.substr(0, i);
 
       m_logbook->importStr (fname2);
@@ -787,7 +787,7 @@ void GameCtrl::load (const string& fname)
   catch (LogException &exception)
   {
     m_error_sound->play();
-    ShowMessageDlg (exception.getText(), "Load-Error");
+    ShowMessageDlg (exception.getText(), wxT("Load-Error"));
     return;
   }
 
@@ -796,7 +796,7 @@ void GameCtrl::load (const string& fname)
 }
 
 //******************************************************************************
-void GameCtrl::save (const string& fname)
+void GameCtrl::save (const wxString& fname)
 //------------------------------------------------------------------------------
 {
   try
@@ -806,7 +806,7 @@ void GameCtrl::save (const string& fname)
   catch (LogException &exception)
   {
     m_error_sound->play();
-    ShowMessageDlg (exception.getText(), "Save-Error");
+    ShowMessageDlg (exception.getText(), wxT("Save-Error"));
   }
 }
 

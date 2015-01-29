@@ -35,16 +35,20 @@ LcdCtrl::LcdCtrl(Ctrl* parent)
   // nocht nicht initialisiert?
   if (s_minus_bmp == 0)
   {
-    char      buf[20];
+    wxChar      buf[20];
     unsigned  i;  // visual studio
 
     // initialisieren
-    s_minus_bmp = CreateBitmap ("lcd", "-");
+    s_minus_bmp = CreateBitmap (wxT("lcd"), wxT("-"));
 
     for (i = 0; i < sizeof (s_digit_bmps) / sizeof (*s_digit_bmps); i++)
     {
-      sprintf (buf, "%i", i);
-      s_digit_bmps[i] = CreateBitmap ("lcd", buf);
+      #ifdef wxUSE_UNICODE
+        swprintf (buf, i, wxT("%i"));
+      #else
+        sprintf (buf, wxT("%i"), i);
+      #endif
+      s_digit_bmps[i] = CreateBitmap (wxT("lcd"), buf);
     }
 
     // check size

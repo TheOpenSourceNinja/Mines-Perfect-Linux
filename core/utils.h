@@ -22,10 +22,12 @@
 //#include <vector>
 //#include <time.h>
 
+#include <wx/string.h>
+
 #undef ASSERT
 #define ASSERT(cond) \
   if (!(cond)) \
-    throw MinesPerfect::AssertException(__FILE__,__LINE__)
+    throw MinesPerfect::AssertException(wxT(__FILE__),__LINE__)
 
 namespace MinesPerfect {
 
@@ -142,7 +144,7 @@ class AssertException : public Exception
 {
 public:
 
-  AssertException (const char* fname, int linenr);
+  AssertException (const wxChar* fname, int linenr);
 };
 
 //******************************************************************************

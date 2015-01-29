@@ -42,24 +42,28 @@ void BoardCtrl::initStatic()
 //------------------------------------------------------------------------------
 {
   // Board-Bitmaps
-  s_board_square_bmp   = CreateBitmap ("board", "Square"  );
-  s_board_triangle_bmp = CreateBitmap ("board", "Triangle");
-  s_board_hexagon_bmp  = CreateBitmap ("board", "Hexagon" );
-  s_board_grid3d_bmp   = CreateBitmap ("board", "3d-Grid" );
+  s_board_square_bmp   = CreateBitmap (wxT("board"), wxT("Square")  );
+  s_board_triangle_bmp = CreateBitmap (wxT("board"), wxT("Triangle"));
+  s_board_hexagon_bmp  = CreateBitmap (wxT("board"), wxT("Hexagon") );
+  s_board_grid3d_bmp   = CreateBitmap (wxT("board"), wxT("3d-Grid") );
   
   // Symb-Bitmaps
-  s_symb_flag_bmp  = CreateBitmap ("symbol", "flag" );
-  s_symb_quest_bmp = CreateBitmap ("symbol", "quest");
-  s_symb_mine_bmp  = CreateBitmap ("symbol", "mine" );
-  s_symb_cross_bmp = CreateBitmap ("symbol", "cross");
+  s_symb_flag_bmp  = CreateBitmap (wxT("symbol"), wxT("flag") );
+  s_symb_quest_bmp = CreateBitmap (wxT("symbol"), wxT("quest"));
+  s_symb_mine_bmp  = CreateBitmap (wxT("symbol"), wxT("mine") );
+  s_symb_cross_bmp = CreateBitmap (wxT("symbol"), wxT("cross"));
 
-  char      buf[20];
+  wxChar      buf[20];
   unsigned  i; // visual studio
 
   for (i = 0; i < sizeof (s_symb_digit_bmps) / sizeof (*s_symb_digit_bmps); i++)
   {
-     sprintf (buf, "%i", i);
-     s_symb_digit_bmps[i] = CreateBitmap ("symbol", buf);
+     #ifdef wxUSE_UNICODE
+       swprintf (buf, i, wxT("%i"));
+     #else
+       sprintf (buf, wxT("%i"), i);
+     #endif
+     s_symb_digit_bmps[i] = CreateBitmap (wxT("symbol"), buf);
   }
   
   // Symb-Bitmaps: check size
@@ -175,7 +179,7 @@ void BoardCtrl::setBoard (BoardNr nr)// setSourceBmp
 {
   // m_source_bmp
   delete m_source_bmp;
-  m_source_bmp = CreateBitmap ("board", m_game->m_options->getBoardName (nr));
+  m_source_bmp = CreateBitmap (wxT("board"), m_game->m_options->getBoardName (nr));
 
   setLevel(m_game->m_options->getLevel());
 }

@@ -19,41 +19,17 @@
 #ifndef LINUX_COMPATIBILITY_H_INCLUDED
 #define LINUX_COMPATIBILITY_H_INCLUDED
 
-#include <stdio.h> //for the itoa wrapper
+#include <stdio.h> //for the itoa() replacement
 #include <time.h> //for CLOCKS_PER_SEC
 
 #define CLK_TCK CLOCKS_PER_SEC
 
-char* itoa( int value, char* str, int base) {
-	switch( base ) {
-		case 10: {
-			sprintf( str, "%d", value );
-			break;
-		}
-		case 16: {
-			sprintf( str, "%x", value );
-			break;
-		}
-		case 8: {
-			sprintf( str, "%o", value );
-			break;
-		}
-		default: break;
-	}
-	return str;
-}
-
 #include <wx/string.h>
-#if defined wxUSE_UNICODE
-  #include <cwchar>
-  int strToInt( wxString str ) {
-    return wcstol( str.c_str(), NULL, 10 );
-  }
-#else
-  #include <cstdlib>
-  int strToInt( wxString str ) {
-    return atoi( str.c_str() );
-  }
-#endif
+
+//replacement for itoa()
+wxString intToStr( int value, wchar_t* str, int base );
+
+//replacement for atoi()
+int strToInt( wxString str );
 
 #endif

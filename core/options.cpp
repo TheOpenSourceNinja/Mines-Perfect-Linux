@@ -18,11 +18,15 @@
 #include <map>
 #include <string>
 #include <cstdlib>
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
 
 #ifdef LINUX
   #define stricmp strcasecmp
   #include <strings.h>
 #endif
+
+#include "linux-compatibility.h"
 
 using namespace std;
 
@@ -40,10 +44,10 @@ namespace MinesPerfect
 
 using namespace MinesPerfect;
 
-string TITLE = "MinesPerfect";
-string USERS = "users";
+wxString TITLE = wxT("MinesPerfect");
+wxString USERS = wxT("users");
 
-const char INI_FNAME[] = "mineperf.ini";
+const wxChar INI_FNAME[] = wxT("mineperf.ini");
 
 
 //******************************************************************************
@@ -56,7 +60,7 @@ const char INI_FNAME[] = "mineperf.ini";
 }
 
 //******************************************************************************
-  bool StringChecker::isValidString (const string& str, string* errtext)
+  bool StringChecker::isValidString (const wxString& str, wxString* errtext)
 //------------------------------------------------------------------------------
 {
   for (unsigned i = 0; i < str.size(); ++i)
@@ -67,7 +71,7 @@ const char INI_FNAME[] = "mineperf.ini";
 }
 
 //******************************************************************************
-  bool User::NameChecker::isValidChar (char ch, string* errtext)
+  bool User::NameChecker::isValidChar (wxChar ch, wxString* errtext)
 //------------------------------------------------------------------------------
 {
   if (isalnum(ch) || ch == '-' || ch == '_')
@@ -77,63 +81,63 @@ const char INI_FNAME[] = "mineperf.ini";
   else
   {
     if (errtext != 0)
-      *errtext = "should contain only alphabetic, numeric, '-' and '_' characters";
+      *errtext = wxT("should contain only alphabetic, numeric, '-' and '_' wxCharacters");
 
     return false; // invalid
   }
 }
 
 //******************************************************************************
-  bool User::NameChecker::isValidStringBase (const string& str, string* errtext)
+  bool User::NameChecker::isValidStringBase (const wxString& str, wxString* errtext)
 //------------------------------------------------------------------------------
 {
-  string err = "";
+  wxString err = wxT("");
 
   if (str.size() < 3)
-    err = "should contain at least 3 characters.";
+    err = wxT("should contain at least 3 wxCharacters.");
   else if (str.size() > 32)
-    err = "should contain not more than 32 characters.";
+    err = wxT("should contain not more than 32 wxCharacters.");
   else if (!isalpha(str[0]))
-    err = "should begin with a alphabetic character.";
+    err = wxT("should begin with a alphabetic wxCharacter.");
 
   if (errtext != 0)
     *errtext = err;
 
-  return err == "";
+  return err == wxT("");
 }
 
 //******************************************************************************
-  bool User::PasswordChecker::isValidChar (char ch, string* errtext)
+  bool User::PasswordChecker::isValidChar (wxChar ch, wxString* errtext)
 //------------------------------------------------------------------------------
 {
-  if (isalnum(ch) || ch == '-' || ch == '@' || ch == '.')
+  if (isalnum(ch) || ch == wxT('-') || ch == wxT('@') || ch == wxT('.'))
   {
      return true; // valid
   }
   else
   {
     if (errtext != 0)
-      *errtext = "should contain only alphabetic, numeric, '-', '.' and '@' characters";
+      *errtext = wxT("should contain only alphabetic, numeric, '-', '.' and '@' wxCharacters");
 
     return false; // invalid
   }
 }
 
 //******************************************************************************
-  bool User::PasswordChecker::isValidStringBase (const string& str, string* errtext)
+  bool User::PasswordChecker::isValidStringBase (const wxString& str, wxString* errtext)
 //------------------------------------------------------------------------------
 {
-  string err = "";
+  wxString err = wxT("");
 
   if (str.size() < 5)
-    err = "should contain at least 5 characters.";
+    err = wxT("should contain at least 5 wxCharacters.");
   else if (str.size() > 32)
-    err = "should contain not more than 32 characters.";
+    err = wxT("should contain not more than 32 wxCharacters.");
 
   if (errtext != 0)
     *errtext = err;
 
-  return err == "";
+  return err == wxT("");
 }
 
 //******************************************************************************
@@ -201,10 +205,10 @@ const char INI_FNAME[] = "mineperf.ini";
     lvl.num_wholes = -1;
 
     board_types.clear();
-    board_types.push_back (BoardType ("Square"));
-    board_types.push_back (BoardType ("Hexagon"));
-    board_types.push_back (BoardType ("Triangle"));
-    board_types.push_back (BoardType ("3d-Grid"));
+    board_types.push_back (BoardType (wxT("Square")));
+    board_types.push_back (BoardType (wxT("Hexagon")));
+    board_types.push_back (BoardType (wxT("Triangle")));
+    board_types.push_back (BoardType (wxT("3d-Grid")));
 
     setLevel (lvl);
     setBoardNr (0);  // muss nach board_types init. werden
@@ -275,7 +279,7 @@ const char INI_FNAME[] = "mineperf.ini";
 }
 
 //******************************************************************************
-  void Options::setRecord (int nr, string name, int time, bool certified_board)
+  void Options::setRecord (int nr, wxString name, int time, bool certified_board)
 //------------------------------------------------------------------------------
 {
   time_t now;
@@ -295,54 +299,56 @@ const char INI_FNAME[] = "mineperf.ini";
   bool Options::loadIni()
 //------------------------------------------------------------------------------
 {
-  ifstream           in (INI_FNAME);
+  wxFileInputStream inFile( INI_FNAME );
+  wxTextInputStream in( inFile );
+  //ifstream           in (INI_FNAME);
   Level              lvl;
   Modus              mod = ORIGINAL;  // default
   BoardNr            bnr = 0;         // default
   int                val_int;
-  string             line, val_str, key, m_law;
-  string::size_type  p1, p2, p3;
+  wxString             line, val_str, key, m_law;
+  wxString::size_type  p1, p2, p3;
   vector<int>        chksums[3];
   int                version = 0;
 
   enum { E_BASE, E_USER, E_BOARD } input_mode = E_BASE;
 
-  if (in == 0)
+  if (!inFile.IsOk())
     return false;
 
   // 1. Zeile testen
-  getline (in, line);
-  if (line[0] != '['
+  line = in.ReadLine();
+  if (line[0] != wxT('[')
   ||  line.substr (1, TITLE.length()) != TITLE)
     return false;
 
-  version = atoi (line.substr(1 + TITLE.length()).c_str());
+  version = strToInt (line.substr(1 + TITLE.length()).c_str());
   if (version < 100 || 999 < version)
     return false;
 
   // Rest einlesen
-  while (!in.eof())
+  while (!inFile.Eof())
   {
-    getline (in, line);
+    line = in.ReadLine();
 
-    p1 = line.find_first_not_of (" \t");
-    if (p1 == string::npos)
+    p1 = line.find_first_not_of (wxT(" \t"));
+    if (p1 == wxString::npos)
       continue;
 
-    if (line[p1] == '[')
+    if (line[p1] == wxT('['))
     {
-      string users_str = "[" + USERS + "]";
+      wxString users_str = wxT("[") + USERS + wxT("]");
       if (line.substr (0, users_str.length()) != users_str)
         return false;
 
       input_mode = E_USER;
     }
-    else if (line[p1] == '<')
+    else if (line[p1] == wxT('<'))
     {
       // neuer Board-Typ
-      p2 = line.find ('>');
-      if (p2 == string::npos || p2 <= p1 + 1
-      ||  line.find_first_not_of (" \t", p2 + 1) != string::npos)
+      p2 = line.find (wxT('>'));
+      if (p2 == wxString::npos || p2 <= p1 + 1
+      ||  line.find_first_not_of (wxT(" \t"), p2 + 1) != wxString::npos)
         return false;
 
       input_mode = E_BOARD;
@@ -352,33 +358,33 @@ const char INI_FNAME[] = "mineperf.ini";
     }
     else
     {
-      p2 = line.find ('=', p1 + 1);
-      if (p2 == string::npos)
+      p2 = line.find (wxT('='), p1 + 1);
+      if (p2 == wxString::npos)
         return false;
 
       key = line.substr (p1, p2 - p1);
 
-      p3 = line.find_first_of (" \t", p2 + 1);
-      if (p3 != string::npos)
+      p3 = line.find_first_of (wxT(" \t"), p2 + 1);
+      if (p3 != wxString::npos)
         line[p3] = 0;
 
       val_str = line.substr (p2 + 1);
-      val_int = atoi (val_str.c_str());
+      val_int = strToInt (val_str.c_str());
 
       // if (board_types.size() == 0)
       if (input_mode == E_BASE)
       {
-        if      (key == "Xpos"      )  setXPos (val_int);
-        else if (key == "Ypos"      )  setYPos (val_int);
-        else if (key == "Level"     )  lvl.nr         = (LevelNr) val_int;
-        else if (key == "Height"    )  lvl.height     = val_int;
-        else if (key == "Width"     )  lvl.width      = val_int;
-        else if (key == "Deep"      )  lvl.deep       = val_int;
-        else if (key == "Mines"     )  lvl.num_mines  = val_int;
-        else if (key == "Wholes"    )  lvl.num_wholes = val_int;
-        else if (key == "Modus"     )  mod            = (Modus) val_int;
-        else if (key == "BoardNr"   )  bnr            = (BoardNr) val_int;
-        else if (key == "MurphysLaw")  m_law          = val_str;
+        if      (key == wxT("Xpos")      )  setXPos (val_int);
+        else if (key == wxT("Ypos")      )  setYPos (val_int);
+        else if (key == wxT("Level")     )  lvl.nr         = (LevelNr) val_int;
+        else if (key == wxT("Height")    )  lvl.height     = val_int;
+        else if (key == wxT("Width")     )  lvl.width      = val_int;
+        else if (key == wxT("Deep")      )  lvl.deep       = val_int;
+        else if (key == wxT("Mines")     )  lvl.num_mines  = val_int;
+        else if (key == wxT("Wholes")    )  lvl.num_wholes = val_int;
+        else if (key == wxT("Modus")     )  mod            = (Modus) val_int;
+        else if (key == wxT("BoardNr")   )  bnr            = (BoardNr) val_int;
+        else if (key == wxT("MurphysLaw"))  m_law          = val_str;
         else                           return false;
       }
       else if (input_mode == E_USER)
@@ -392,34 +398,34 @@ const char INI_FNAME[] = "mineperf.ini";
       }
       else
       {
-        if      (key == "Name0")  board_types.back().records[0].name = val_str;
-        else if (key == "Name1")  board_types.back().records[1].name = val_str;
-        else if (key == "Name2")  board_types.back().records[2].name = val_str;
+        if      (key == wxT("Name0"))  board_types.back().records[0].name = val_str;
+        else if (key == wxT("Name1"))  board_types.back().records[1].name = val_str;
+        else if (key == wxT("Name2"))  board_types.back().records[2].name = val_str;
         
-        else if (key == "Time0")  board_types.back().records[0].time = val_int;
-        else if (key == "Time1")  board_types.back().records[1].time = val_int;
-        else if (key == "Time2")  board_types.back().records[2].time = val_int;
+        else if (key == wxT("Time0"))  board_types.back().records[0].time = val_int;
+        else if (key == wxT("Time1"))  board_types.back().records[1].time = val_int;
+        else if (key == wxT("Time2"))  board_types.back().records[2].time = val_int;
         
-        else if (key == "Date0")  board_types.back().records[0].date = val_int;
-        else if (key == "Date1")  board_types.back().records[1].date = val_int;
-        else if (key == "Date2")  board_types.back().records[2].date = val_int;
+        else if (key == wxT("Date0"))  board_types.back().records[0].date = val_int;
+        else if (key == wxT("Date1"))  board_types.back().records[1].date = val_int;
+        else if (key == wxT("Date2"))  board_types.back().records[2].date = val_int;
         
-        else if (key == "CertifiedBoard0")  
+        else if (key == wxT("CertifiedBoard0"))  
           board_types.back().records[0].certified_board = (val_int == 1);
-        else if (key == "CertifiedBoard1")  
+        else if (key == wxT("CertifiedBoard1"))  
           board_types.back().records[1].certified_board = (val_int == 1);
-        else if (key == "CertifiedBoard2")  
+        else if (key == wxT("CertifiedBoard2"))  
           board_types.back().records[2].certified_board = (val_int == 1);
         
-        else if (key == "Checksum0")  chksums[0].push_back(val_int);
-        else if (key == "Checksum1")  chksums[1].push_back(val_int);
-        else if (key == "Checksum2")  chksums[2].push_back(val_int);
+        else if (key == wxT("Checksum0"))  chksums[0].push_back(val_int);
+        else if (key == wxT("Checksum1"))  chksums[1].push_back(val_int);
+        else if (key == wxT("Checksum2"))  chksums[2].push_back(val_int);
 
-        else if (key == "WasSend0")  
+        else if (key == wxT("WasSend0"))  
           board_types.back().records[0].was_send = (val_int == 1);
-        else if (key == "WasSend1")  
+        else if (key == wxT("WasSend1"))  
           board_types.back().records[1].was_send = (val_int == 1);
-        else if (key == "WasSend2")  
+        else if (key == wxT("WasSend2"))  
           board_types.back().records[2].was_send = (val_int == 1);
         
         else                          return false;
@@ -441,8 +447,8 @@ const char INI_FNAME[] = "mineperf.ini";
       return false;
   }
 
-  if      (m_law == "on")   setMurphysLaw (true);
-  else if (m_law == "off")  setMurphysLaw (false);
+  if      (m_law == wxT("on"))   setMurphysLaw (true);
+  else if (m_law == wxT("off"))  setMurphysLaw (false);
   else                      return false;
 
   if (!setLevel (lvl) || !setModus (mod) || !setBoardNr (bnr))
@@ -469,65 +475,66 @@ const char INI_FNAME[] = "mineperf.ini";
 //------------------------------------------------------------------------------
 {
   // speichern
-  ofstream  out(INI_FNAME);
+  wxFileOutputStream outFile( INI_FNAME );
+  wxTextOutputStream out( outFile );
   unsigned  i;
 
-  out << "[" << TITLE << " " << Glob::VERSION << "]"       << '\n'
-      << "Level="      << getLevel().nr                    << '\n'
-      << "Modus="      << getModus()                       << '\n'
-      << "Height="     << getLevel().height                << '\n'
-      << "Width="      << getLevel().width                 << '\n'
-      << "Deep="       << getLevel().deep                  << '\n'
-      << "Mines="      << getLevel().num_mines             << '\n'
-      << "Wholes="     << getLevel().num_wholes            << '\n'
-      << "Xpos="       << getXPos()                        << '\n'
-      << "Ypos="       << getYPos()                        << '\n'
-      << "BoardNr="    << getBoardNr()                     << '\n'
-      << "MurphysLaw=" << (getMurphysLaw() ? "on" : "off") << '\n';
+  out << wxT("[") << TITLE << wxT(" ") << Glob::VERSION << wxT("]")       << wxT('\n')
+      << wxT("Level=")      << getLevel().nr                    << wxT('\n')
+      << wxT("Modus=")      << getModus()                       << wxT('\n')
+      << wxT("Height=")     << getLevel().height                << wxT('\n')
+      << wxT("Width=")      << getLevel().width                 << wxT('\n')
+      << wxT("Deep=")       << getLevel().deep                  << wxT('\n')
+      << wxT("Mines=")      << getLevel().num_mines             << wxT('\n')
+      << wxT("Wholes=")     << getLevel().num_wholes            << wxT('\n')
+      << wxT("Xpos=")       << getXPos()                        << wxT('\n')
+      << wxT("Ypos=")       << getYPos()                        << wxT('\n')
+      << wxT("BoardNr=")    << getBoardNr()                     << wxT('\n')
+      << wxT("MurphysLaw=") << (getMurphysLaw() ? wxT("on") : wxT("off")) << wxT('\n');
 
 
-  out << '\n';
-  out << "[" << USERS << "]\n";
+  out << wxT('\n');
+  out << wxT("[") << USERS << wxT("]\n");
   for (i = 0; i < users.size(); ++i)
   {
-    out << users[i].name << "=" << users[i].password << '\n';
+    out << users[i].name << wxT("=") << users[i].password << wxT('\n');
   }
 
   for (i = 0; i < board_types.size(); ++i)
   {
-    out << '\n';
-    out << '<'           << board_types[i].name            << ">\n";
-    out << "Time0="      << board_types[i].records[0].time << '\n';
-    out << "Date0="      << board_types[i].records[0].date << '\n';
-    out << "Name0="      << board_types[i].records[0].name << '\n';
-    out << "CertifiedBoard0=" 
+    out << wxT('\n');
+    out << wxT('<')           << board_types[i].name            << wxT(">\n");
+    out << wxT("Time0=")      << board_types[i].records[0].time << wxT('\n');
+    out << wxT("Date0=")      << (wxUint32) board_types[i].records[0].date << wxT('\n');
+    out << wxT("Name0=")      << board_types[i].records[0].name << wxT('\n');
+    out << wxT("CertifiedBoard0=") 
                          << (board_types[i].records[0].certified_board ? 1 : 0) 
-                         << '\n';
-    out << "Checksum0="  << board_types[i].getChecksum(0,Glob::VERSION) << '\n';
-    out << "WasSend0="   << board_types[i].records[0].was_send << '\n';
+                         << wxT('\n');
+    out << wxT("Checksum0=")  << board_types[i].getChecksum(0,Glob::VERSION) << wxT('\n');
+    out << wxT("WasSend0=")   << board_types[i].records[0].was_send << wxT('\n');
     
-    out << "Time1="      << board_types[i].records[1].time << '\n';
-    out << "Date1="      << board_types[i].records[1].date << '\n';
-    out << "Name1="      << board_types[i].records[1].name << '\n';
-    out << "CertifiedBoard1=" 
+    out << wxT("Time1=")      << board_types[i].records[1].time << wxT('\n');
+    out << wxT("Date1=")      << (wxUint32) board_types[i].records[1].date << wxT('\n');
+    out << wxT("Name1=")      << board_types[i].records[1].name << wxT('\n');
+    out << wxT("CertifiedBoard1=") 
                          << (board_types[i].records[1].certified_board ? 1 : 0) 
-                         << '\n';
-    out << "Checksum1="  << board_types[i].getChecksum(1,Glob::VERSION) << '\n';
-    out << "WasSend1="   << board_types[i].records[1].was_send << '\n';
+                         << wxT('\n');
+    out << wxT("Checksum1=")  << board_types[i].getChecksum(1,Glob::VERSION) << wxT('\n');
+    out << wxT("WasSend1=")   << board_types[i].records[1].was_send << wxT('\n');
     
-    out << "Time2="      << board_types[i].records[2].time << '\n';
-    out << "Date2="      << board_types[i].records[2].date << '\n';
-    out << "Name2="      << board_types[i].records[2].name << '\n';
-    out << "CertifiedBoard2=" 
+    out << wxT("Time2=")      << board_types[i].records[2].time << wxT('\n');
+    out << wxT("Date2=")      << (wxUint32) board_types[i].records[2].date << wxT('\n');
+    out << wxT("Name2=")      << board_types[i].records[2].name << wxT('\n');
+    out << wxT("CertifiedBoard2=") 
                          << (board_types[i].records[2].certified_board ? 1 : 0) 
-                         << '\n';
-    out << "Checksum2="  << board_types[i].getChecksum(2,Glob::VERSION) << '\n';
-    out << "WasSend2="   << board_types[i].records[2].was_send << '\n';
+                         << wxT('\n');
+    out << wxT("Checksum2=")  << board_types[i].getChecksum(2,Glob::VERSION) << wxT('\n');
+    out << wxT("WasSend2=")   << board_types[i].records[2].was_send << wxT('\n');
   }
 }
 
 //******************************************************************************
-  const string Options::getBoardName (BoardNr nr) const
+  const wxString Options::getBoardName (BoardNr nr) const
 //------------------------------------------------------------------------------
 {
   ASSERT (0 <= nr && nr < (int) board_types.size());
@@ -549,17 +556,17 @@ const char INI_FNAME[] = "mineperf.ini";
 //------------------------------------------------------------------------------
 {
   // fnames: alle Dateien die mit .txt und mit .bmp existieren
-  vector<string>  fnames;
-  vector<string>  bmp_files;
+  vector<wxString>  fnames;
+  vector<wxString>  bmp_files;
 
-  FindFiles (bmp_files, "./boards/*.txt"); 
+  FindFiles (bmp_files, wxT("./boards/*.txt")); 
 
-  for (vector<string>::const_iterator f =  bmp_files.begin();
+  for (vector<wxString>::const_iterator f =  bmp_files.begin();
                                       f != bmp_files.end(); ++f)
   {
-    string  fname = f->substr (0, f->find ("."));
+    wxString  fname = f->substr (0, f->find (wxT(".")));
 
-    if (!FileExist (string("./boards/") + fname + ".bmp"))
+    if (!FileExist (wxString(wxT("./boards/")) + fname + wxT(".bmp")))
       continue;
 
     fnames.push_back (fname);
@@ -572,10 +579,10 @@ const char INI_FNAME[] = "mineperf.ini";
   for (BT_CI  b =  board_types.begin(); b != board_types.end(); ++b)
   {
     // f
-    vector<string>::iterator  f;
+    vector<wxString>::iterator  f;
 
     for (f = fnames.begin(); f != fnames.end(); ++f)
-      if (stricmp (f->c_str(), b->name.c_str()) == 0)  // Datei gefunden
+      if ( f->CmpNoCase( b->name ) == 0 )//stricmp (f->c_str(), b->name.c_str()) == 0)  // Datei gefunden
         break;
 
     // new_board_types
@@ -589,10 +596,10 @@ const char INI_FNAME[] = "mineperf.ini";
       fnames.erase (f);
     }
     // Standardboard?
-    else if (stricmp (b->name.c_str(), "square")   == 0
-         ||  stricmp (b->name.c_str(), "hexagon")  == 0
-         ||  stricmp (b->name.c_str(), "triangle") == 0
-         ||  stricmp (b->name.c_str(), "3d-grid")  == 0)
+    else if ( b->name.CmpNoCase( wxT("square") ) == 0 //stricmp (b->name.c_str(), wxT("square"))   == 0
+         ||  b->name.CmpNoCase( wxT("hexagon") ) == 0 //stricmp (b->name.c_str(), wxT("hexagon"))  == 0
+         ||  b->name.CmpNoCase( wxT("triangle") ) == 0 //stricmp (b->name.c_str(), wxT("triangle")) == 0
+         ||  b->name.CmpNoCase( wxT("3d-grid") ) == 0 ) //stricmp (b->name.c_str(), wxT("3d-grid"))  == 0)
     {
       new_board_types.push_back (*b);
       new_board_types.back().enabled = true;  // uebernehmen
@@ -617,7 +624,7 @@ const char INI_FNAME[] = "mineperf.ini";
 
   // neuen Boards hinzufuegen
   { // visual studio
-  for (vector<string>::const_iterator f =  fnames.begin();
+  for (vector<wxString>::const_iterator f =  fnames.begin();
                                       f != fnames.end(); f++)
   {
     addBoard (*f);
@@ -626,12 +633,12 @@ const char INI_FNAME[] = "mineperf.ini";
 }
 
 //******************************************************************************
-  void Options::getUserlist(vector<string>& user_list)
+  void Options::getUserlist(vector<wxString>& user_list)
 //------------------------------------------------------------------------------
 // create a list with usernames in the order of the recorddate
 {
   // user_map
-  map<string,Record*> user_map;
+  map<wxString,Record*> user_map;
 
   for (int b = 0; b < getNumBoards(); ++b)
   {
@@ -641,9 +648,9 @@ const char INI_FNAME[] = "mineperf.ini";
     for (int r = 0; r < ntypes; ++r)
     {
       Record* rec = &btype->records[r];
-      string  key = Lower(rec->name);
+      wxString  key = Lower(rec->name);
 
-      map<string,Record*>::iterator ui = user_map.find(key);
+      map<wxString,Record*>::iterator ui = user_map.find(key);
 
       if (ui == user_map.end()) 
         user_map[key] = rec;
@@ -655,7 +662,7 @@ const char INI_FNAME[] = "mineperf.ini";
   // date_map
   multimap<int,Record*> date_map;
 
-  map<string,Record*>::const_iterator  ui;
+  map<wxString,Record*>::const_iterator  ui;
   for (ui = user_map.begin(); ui != user_map.end(); ++ui)
     date_map.insert( make_pair(ui->second->date,ui->second) );
 
@@ -665,7 +672,7 @@ const char INI_FNAME[] = "mineperf.ini";
   multimap<int,Record*>::reverse_iterator  di;
   for (di = date_map.rbegin(); di != date_map.rend(); ++di)
   {
-    string             name = di->second->name;
+    wxString             name = di->second->name;
     User::NameChecker  checker;
 
     if (checker.isValidString(name))
@@ -674,7 +681,7 @@ const char INI_FNAME[] = "mineperf.ini";
 }
 
 //******************************************************************************
-  void Options::renameUser (const string& old_name, const string& new_name)
+  void Options::renameUser (const wxString& old_name, const wxString& new_name)
 //------------------------------------------------------------------------------
 {
   for (int b = 0; b < getNumBoards(); ++b)
@@ -693,7 +700,7 @@ const char INI_FNAME[] = "mineperf.ini";
 }
 
 //******************************************************************************
-  int Options::findBoardNr (const string& name)
+  int Options::findBoardNr (const wxString& name)
 //------------------------------------------------------------------------------
 {
   for (int b = 0; b < getNumBoards(); ++b)

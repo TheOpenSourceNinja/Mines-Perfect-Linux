@@ -31,8 +31,8 @@ ButtonCtrl::ButtonCtrl(Ctrl* parent) : Ctrl(parent)
   // statische Elemente initialisieren
   if (s_button_up_bmp == 0)
   {
-    s_button_up_bmp   = CreateBitmap ("button", "up"  );
-    s_button_down_bmp = CreateBitmap ("button", "down");
+    s_button_up_bmp   = CreateBitmap (wxT("button"), wxT("up")  );
+    s_button_down_bmp = CreateBitmap (wxT("button"), wxT("down"));
     
     ASSERT (s_button_up_bmp->getSize() == s_button_down_bmp->getSize());
   }

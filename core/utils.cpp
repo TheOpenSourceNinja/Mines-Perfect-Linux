@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
-//#include <string>
+//#include <wxString>
 //#include <vector>
 #include <time.h>
 #include <algorithm>
@@ -25,9 +25,9 @@
 
 #include "utils.h"
 
-#ifdef LINUX
+//#ifdef LINUX
   #include "linux-compatibility.h"
-#endif
+//#endif
 
 using namespace MinesPerfect;
 using namespace std;
@@ -73,12 +73,12 @@ bool Rect::contains (const Point& p)
 }
 
 //******************************************************************************
-std::string MinesPerfect::Lower (const std::string& s)
+wxString MinesPerfect::Lower (const wxString& s)
 //------------------------------------------------------------------------------
 {
-  string s2 = s;
+  wxString s2 = s;
 
-//  for (string::iterator i = s2.begin(); i != s2.end(); ++i)
+//  for (wxString::iterator i = s2.begin(); i != s2.end(); ++i)
 //    *i = tolower(*i);
   transform (s2.begin(), s2.end(), s2.begin(), ::tolower);
 
@@ -86,16 +86,16 @@ std::string MinesPerfect::Lower (const std::string& s)
 }
 
 //******************************************************************************
-AssertException::AssertException (const char* fname, int linenr)
+AssertException::AssertException (const wxChar* fname, int linenr)
 //------------------------------------------------------------------------------
 {
-  char buf[20];
-  itoa (linenr, buf, 10);
+  wxChar buf[20];
+  intToStr (linenr, buf, 10);
 
-  string fname2 = fname;
-  for (string::iterator i = fname2.begin(); i != fname2.end(); ++i)
-    if (*i == '\\')
-      *i = '/';
+  wxString fname2 = fname;
+  for (wxString::iterator i = fname2.begin(); i != fname2.end(); ++i)
+    if (*i == wxT('\\'))
+      *i = wxT('/');
 
-  text = string("Exception in file ") + fname2 + " in line " + buf;
+  text = wxString(wxT("Exception in file ")) + fname2 + wxT(" in line ") + buf;
 }

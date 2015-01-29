@@ -21,6 +21,8 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <wx/txtstrm.h>
+#include <wx/wfstream.h>
 
 #ifdef VISUAL_CPP
   #include <minmax.h> // visual studio (max)
@@ -46,21 +48,22 @@ namespace MinesPerfect // wegen Compiler
 
 using namespace MinesPerfect;
 
-const char*  AUTO_LOG_FNAME = "auto.log";
+wxString  AUTO_LOG_FNAME = wxT("auto.log");
 
 //******************************************************************************
 void Log::write (const wxString& fname) const
 //------------------------------------------------------------------------------
 {
-  wxFileOutputStream outFile(wxFile(fname, wxFile::write_append));
-  wxTextOutputStream out(outFile);
+  wxFile outFile( fname, wxFile::write_append );
+  wxFileOutputStream outFileStream( outFile );
+  wxTextOutputStream out(outFileStream);
   //ofstream  out (fname.c_str(), ios::out | ios::app);
 
-  if (!out)
-    throw LogException (("Log::write(): " + fname
-                        + " couldn't open.").c_str());
+  if (!outFileStream.IsOk())
+    throw LogException ((wxT("Log::write(): ") + fname
+                        + wxT(" couldn't open.")).c_str());
 
-  out << time1 << " " << name << " " << val << (valid ? "" : "!") << "\n";
+  out << (wxUint32) time1 << wxT(" ") << name << wxT(" ") << val << (valid ? wxT("") : wxT("!")) << wxT("\n");
 }
 
 //******************************************************************************
@@ -175,29 +178,31 @@ const Log& Logbook::getPlayLog() const
 void Logbook::writeOptions (const wxString& fname) const
 //------------------------------------------------------------------------------
 {
-  ofstream  out (fname.c_str());
+  wxFile outFile( fname, wxFile::write_append );
+  wxFileOutputStream outFileStream( outFile );
+  wxTextOutputStream out(outFileStream);
 
-  if (!out)
-    throw LogException (("Logbook::writeOptions(): " + fname
-                       + " konnte nicht geoeffnet werden!").c_str());
+  if (!outFileStream.IsOk())
+    throw LogException ((wxT("Logbook::writeOptions(): ") + fname
+                       + wxT(" konnte nicht geoeffnet werden!")).c_str());
 
-  out << 0 << " " << LOG_VERSION      << " " << Glob::VERSION          << "\n";
-  out << 0 << " " << LOG_VARIANT      << " " << _VARIANT_              << "\n";
-  out << 0 << " " << LOG_RAND_SEQ     << " " << rand_seq               << "\n";
-  out << 0 << " " << LOG_BOARD_NAME   << " " << options.getBoardName() << "\n";
-  out << 0 << " " << LOG_BOARD_CHKSUM << " " << 0                      << "\n";
-  out << 0 << " " << LOG_LEVEL        << " " << options.getLevelNr()   << "\n";
-  out << 0 << " " << LOG_HEIGHT       << " " << options.getHeight()    << "\n";
-  out << 0 << " " << LOG_WIDTH        << " " << options.getWidth()     << "\n";
-  out << 0 << " " << LOG_DEEP         << " " << options.getDeep()      << "\n";
-  out << 0 << " " << LOG_NUM_MINES    << " " << options.getNumMines()  << "\n";
-  out << 0 << " " << LOG_NUM_WHOLES   << " " << options.getNumWholes() << "\n";
-  out << 0 << " " << LOG_MODUS        << " " << options.getModus()     << "\n";
-  out << 0 << " " << LOG_MURPHYS_LAW  << " " << options.getMurphysLaw()<< "\n";
-  out << 0 << " " << LOG_AUTO_STAGE   << " " << options.getAutoStage() << "\n";
-  out << 0 << " " << LOG_MAX_STAGE    << " " << options.getMaxStage()  << "\n";
-  out << 0 << " " << LOG_SHOW_MINES   << " " << options.getShowMines() << "\n";
-  out << "\n";
+  out << 0 << wxT(" ") << LOG_VERSION      << wxT(" ") << Glob::VERSION          << wxT("\n");
+  out << 0 << wxT(" ") << LOG_VARIANT      << wxT(" ") << _VARIANT_              << wxT("\n");
+  out << 0 << wxT(" ") << LOG_RAND_SEQ     << wxT(" ") << (wxUint32) rand_seq               << wxT("\n");
+  out << 0 << wxT(" ") << LOG_BOARD_NAME   << wxT(" ") << options.getBoardName() << wxT("\n");
+  out << 0 << wxT(" ") << LOG_BOARD_CHKSUM << wxT(" ") << 0                      << wxT("\n");
+  out << 0 << wxT(" ") << LOG_LEVEL        << wxT(" ") << options.getLevelNr()   << wxT("\n");
+  out << 0 << wxT(" ") << LOG_HEIGHT       << wxT(" ") << options.getHeight()    << wxT("\n");
+  out << 0 << wxT(" ") << LOG_WIDTH        << wxT(" ") << options.getWidth()     << wxT("\n");
+  out << 0 << wxT(" ") << LOG_DEEP         << wxT(" ") << options.getDeep()      << wxT("\n");
+  out << 0 << wxT(" ") << LOG_NUM_MINES    << wxT(" ") << options.getNumMines()  << wxT("\n");
+  out << 0 << wxT(" ") << LOG_NUM_WHOLES   << wxT(" ") << options.getNumWholes() << wxT("\n");
+  out << 0 << wxT(" ") << LOG_MODUS        << wxT(" ") << options.getModus()     << wxT("\n");
+  out << 0 << wxT(" ") << LOG_MURPHYS_LAW  << wxT(" ") << options.getMurphysLaw()<< wxT("\n");
+  out << 0 << wxT(" ") << LOG_AUTO_STAGE   << wxT(" ") << options.getAutoStage() << wxT("\n");
+  out << 0 << wxT(" ") << LOG_MAX_STAGE    << wxT(" ") << options.getMaxStage()  << wxT("\n");
+  out << 0 << wxT(" ") << LOG_SHOW_MINES   << wxT(" ") << options.getShowMines() << wxT("\n");
+  out << wxT("\n");
 }
 
 //******************************************************************************
@@ -217,43 +222,44 @@ void Logbook::read (const wxString& fname)
 // Lesen eines Logfiles
 {
   if (fname == AUTO_LOG_FNAME)
-    throw LogException ((wxString ("Logbook::read(): ") + AUTO_LOG_FNAME
-                       + " isn't allowed to read.").c_str());
+    throw LogException ((wxString (wxT("Logbook::read(): ")) + AUTO_LOG_FNAME
+                       + wxT(" isn't allowed to read.")).c_str());
+  
+  wxFileInputStream inFile( fname );
+  wxTextInputStream in( inFile );
 
-  ifstream  in (fname.c_str());
-
-  if (!in)
-    throw LogException (("Logbook::read(): " + fname
-                       + " cannot open.").c_str());
+  if (!inFile.IsOk())
+    throw LogException ((wxT("Logbook::read(): ") + fname
+                       + wxT(" cannot open.")).c_str());
 
   Log    log;
   Level  lvl;
 
   logs.clear();
 
-  while (!in.eof())
+  while (!inFile.Eof())
   {
     // str1, str2, str3
     wxString str1, str2, str3;
     
-    in >> str1;
-    if (str1.size() == 0)
+    str1 = in.ReadWord(); //in >> str1;
+    if (str1.IsEmpty())
       break;
-    else if (in.eof())
-      throw LogException (wxString("Logbook::read(1): Number of entries must be a "
-                                 "multiple of three. (") + str1 + ")");
-    in >> str2;
-    if (in.eof())
-      throw LogException ("Logbook::read(2): Number of entries must be a "
-                          "multiple of three.");
+    else if (inFile.Eof())
+      throw LogException (wxString(wxT("Logbook::read(1): Number of entries must be a ")
+                                 wxT("multiple of three. (")) + str1 + wxT(")"));
+    str2 = in.ReadWord(); //in >> str2;
+    if (inFile.Eof())
+      throw LogException (wxT("Logbook::read(2): Number of entries must be a ")
+                          wxT("multiple of three."));
       
-    in >> str3;
+    str3 = in.ReadWord(); //in >> str3;
  
     // log
-    if (str1.find_first_not_of ("0123456789!") != wxString::npos)
-      throw LogException (wxString("Logbook::read: '") + str1 + "' must not contains non-digits.");
+    if (str1.find_first_not_of (wxT("0123456789!")) != wxString::npos)
+      throw LogException (wxString(wxT("Logbook::read: '")) + str1 + wxT("' must not contains non-digits."));
    
-    log.time1 = atoi (str1.c_str());
+    log.time1 = strToInt (str1);
     log.name = str2;
 
     if (log.name == LOG_BOARD_NAME)
@@ -261,14 +267,14 @@ void Logbook::read (const wxString& fname)
       log.val = options.findBoardNr(str3);
           
       if (log.val == -1)
-        throw LogException (wxString("Logbook::read: board '") + str3 + "' not found!");
+        throw LogException (wxString(wxT("Logbook::read: board '")) + str3 + wxT("' not found!"));
     }
     else
     {
-      if (str3.find_first_not_of ("-0123456789!") != wxString::npos)
-        throw LogException (wxString("Logbook::read: '") + str3 + "' must not contains non-digits.");
+      if (str3.find_first_not_of (wxT("-0123456789!")) != wxString::npos)
+        throw LogException (wxString(wxT("Logbook::read: '")) + str3 + wxT("' must not contains non-digits."));
         
-      log.val = atoi (str3.c_str());   
+      log.val = strToInt (str3);   
     }
 
     // log auswerten
@@ -289,7 +295,7 @@ void Logbook::read (const wxString& fname)
       else if (log.name == LOG_SHOW_MINES)  options.setShowMines  (log.val != 0);
       else if (log.name != LOG_VERSION && log.name != LOG_VARIANT
            &&  log.name != LOG_BOARD_CHKSUM)
-        throw LogException (wxString("Logbook::read: '") + log.name + "' not recognize.");
+        throw LogException (wxString(wxT("Logbook::read: '")) + log.name + wxT("' not recognize."));
     }
     else
     {
@@ -365,13 +371,13 @@ void Logbook::operator<< (const Log& log)
     // Waehrend eines Abspielens duerfen nur Out-Of-Time und Start-Timer
     // Logs geschrieben werden!
     if (!logs[play_index].isComputerLog())
-      throw LogException (wxString("logs[].name == '") + logs[play_index].name 
-                         + "' invalid!");
+      throw LogException (wxString(wxT("logs[].name == '")) + logs[play_index].name 
+                         + wxT("' invalid!"));
     // Kommen Computerlogs in der selben Reihenfolge?  
     else if (logs[play_index].name != log2.name)
-      throw LogException ("Logbook::operator<<: log.name invalid");
+      throw LogException (wxT("Logbook::operator<<: log.name invalid"));
     else if (logs[play_index].val != log2.val)
-      throw LogException ("Logbook::operator<<: log.val invalid");
+      throw LogException (wxT("Logbook::operator<<: log.val invalid"));
 
     // Log schreiben
     if (Glob::log_on)
@@ -417,11 +423,11 @@ bool Logbook::undo(bool all)
 // anschliessend muss es noch einmal durchgespielt werden
 {
   if (isPlaying())
-    throw LogException ("Logbook::undo(): is read only!");
+    throw LogException (wxT("Logbook::undo(): is read only!"));
   else if (cur_index > logs.size())
-    throw LogException ("Logbook::undo(): invalid cur_index");
+    throw LogException (wxT("Logbook::undo(): invalid cur_index"));
   else if (play_index != cur_index)
-    throw LogException ("Logbook::undo(): invalid play_index");
+    throw LogException (wxT("Logbook::undo(): invalid play_index"));
     
   // first_valid
   bool     found_valid = false;
@@ -461,7 +467,7 @@ bool Logbook::undo(bool all)
 */
   if (cur_index < logs.size() 
   && (!logs[cur_index].valid || logs[cur_index].isComputerLog()))
-    throw LogException ("Logbook::undo(): invalid log!");
+    throw LogException (wxT("Logbook::undo(): invalid log!"));
 
   if (all)
   {
@@ -497,7 +503,7 @@ bool Logbook::redo (Log& log)
 // anschliessend muss log noch durchgefuehrt werden
 {
   if (isPlaying())
-    throw LogException ("Logbook::redo(): is read only!");
+    throw LogException (wxT("Logbook::redo(): is read only!"));
 
   if (cur_index >= logs.size())
     return false; // kein redo durchgefuehrt
@@ -525,7 +531,7 @@ bool Logbook::redo (Log& log)
 
   // cur_index muss immer auf einem gueltigen stehen
   if (!log.valid || log.isComputerLog())
-    throw LogException (wxString("Logbook::redo(): invalid log! (") + log.name + "')");
+    throw LogException (wxString(wxT("Logbook::redo(): invalid log! (")) + log.name + wxT("')"));
 
   // cur_index wird auf den naechsten freien oder den naechsten gueltigen Log
   // gesetzt.  
@@ -567,7 +573,7 @@ char Logbook::Int6ToChar (int val) const
   else if (val == 62)  return '-';
   else if (val == 63)  return '_';
 
-  throw LogException ("Logbook::Int6ToChar: num_bits too large.");
+  throw LogException (wxT("Logbook::Int6ToChar: num_bits too large."));
 }
 
 //******************************************************************************
@@ -580,57 +586,57 @@ int Logbook::CharToInt6 (char ch) const
   else if (ch == '-')               return 62;
   else if (ch == '_')               return 63;
 
-  throw LogException ("Logbook::CharToInt6: num_bits too large.");
+  throw LogException (wxT("Logbook::CharToInt6: num_bits too large."));
 }
 
 //******************************************************************************
 wxString Logbook::exportStr () const
 //------------------------------------------------------------------------------
 {
-  wxString    func_name = "Logbook::exportStr: ";
+  wxString    func_name = wxT("Logbook::exportStr: ");
   wxString    text;
-  char      buf[20]; // fuer atoi
+  wxChar      buf[20]; // fuer strToInt
   unsigned  i;
-  char      sep = ',';
+  wxChar      sep = wxT(',');
 
   //--- stat. Informationen ---
 
   //
-  text =  itoa (Glob::VERSION, buf, 10); 
+  text =  intToStr (Glob::VERSION, buf, 10); 
   text += sep;
-  text += itoa (_VARIANT_, buf, 10);
+  text += intToStr (_VARIANT_, buf, 10);
   text += sep;
   text += options.getBoardName();
   text += sep;
-  text += itoa (options.getLevelNr(), buf, 10);
+  text += intToStr (options.getLevelNr(), buf, 10);
   text += sep;
 
   if (options.getLevelNr() == USER_DEFINED)
   {
-    text += itoa (options.getHeight(), buf, 10);
+    text += intToStr (options.getHeight(), buf, 10);
     text += sep;
-    text += itoa (options.getWidth(), buf, 10);
+    text += intToStr (options.getWidth(), buf, 10);
     text += sep;
-    text += itoa (options.getDeep(), buf, 10);
+    text += intToStr (options.getDeep(), buf, 10);
     text += sep;
-    text += itoa (options.getNumMines(), buf, 10);
+    text += intToStr (options.getNumMines(), buf, 10);
     text += sep;
-    text += itoa (options.getNumWholes(), buf, 10);
+    text += intToStr (options.getNumWholes(), buf, 10);
     text += sep;
   }
 
-  text += itoa (options.getModus(), buf, 10);
+  text += intToStr (options.getModus(), buf, 10);
   text += sep;
-  text += itoa (options.getMurphysLaw(), buf, 10);
+  text += intToStr (options.getMurphysLaw(), buf, 10);
   text += sep;
 
-  text += itoa (options.getAutoStage(), buf, 10);
+  text += intToStr (options.getAutoStage(), buf, 10);
   text += sep;
-  text += itoa (options.getMaxStage(), buf, 10);
+  text += intToStr (options.getMaxStage(), buf, 10);
   text += sep;
-  text += itoa (options.getShowMines(), buf, 10);
+  text += intToStr (options.getShowMines(), buf, 10);
   text += sep;
-  text += itoa (rand_seq, buf, 10);
+  text += intToStr (rand_seq, buf, 10);
   text += sep;
 
   //--- dyn. Informationen ---
@@ -653,7 +659,7 @@ wxString Logbook::exportStr () const
   num_bits = max (num_bits, 8); // 8 == Logs::Type + Logs::Misc
 
   if (num_bits + 6 - 1 > 31) // gibt sonst Probleme mit word
-    throw LogException (func_name + "num_bits too large.");
+    throw LogException (func_name + wxT("num_bits too large."));
 
   text += Int6ToChar (num_bits);
 
@@ -669,13 +675,13 @@ wxString Logbook::exportStr () const
       continue;
 
     if (val > (1 << num_bits))
-      throw LogException (func_name + "val too large.");
+      throw LogException (func_name + wxT("val too large."));
 
     word += val << word_bits; // val an word anhaengen
     word_bits += num_bits;
 
     if (word >= (1 << word_bits))
-      throw LogException (func_name + "word too large.");
+      throw LogException (func_name + wxT("word too large."));
 
     // vollstaendige Buchstaben ausgeben
     while (word_bits >= 6)
@@ -685,15 +691,15 @@ wxString Logbook::exportStr () const
       word_bits -= 6;
 
       if (word > (1 << word_bits))
-        throw LogException (func_name + "word too large.");
+        throw LogException (func_name + wxT("word too large."));
     }
   }
 
   if (word_bits >= 6)
-    throw LogException (func_name + "word_bits too large.");
+    throw LogException (func_name + wxT("word_bits too large."));
 
   if (word >= (1 << word_bits))
-    throw LogException (func_name + "word too large.");
+    throw LogException (func_name + wxT("word too large."));
 
   // letzten unvollstaendigen Buchstaben ausgeben
   if (word_bits > 0)
@@ -706,7 +712,7 @@ wxString Logbook::exportStr () const
 void Logbook::importStr (const wxString& text)
 //------------------------------------------------------------------------------
 {
-  wxString func_name = "Logbook::importStr: ";
+  wxString func_name = wxT("Logbook::importStr: ");
 
   //--- stat. Informationen ---
 
@@ -722,69 +728,69 @@ void Logbook::importStr (const wxString& text)
   }
 
   if (parts.size() < 4) // min. bis Level
-    throw LogException (func_name + "too few parts.");
+    throw LogException (func_name + wxT("too few parts."));
 
   unsigned i = 0;
 
   // Version + Variante
-  int version = atoi (parts[i++].c_str()); 
-//  int variant = atoi (parts[i++].c_str()); // wird nicht gebraucht
+  int version = strToInt (parts[i++].c_str()); 
+//  int variant = strToInt (parts[i++].c_str()); // wird nicht gebraucht
   i++; // variant ueberspringen
 
   if (version > Glob::VERSION)
-    throw LogException (func_name + "invalid version.");
+    throw LogException (func_name + wxT("invalid version."));
 
   // board_name
   int board_nr = options.findBoardNr (parts[i++]);
 
   if (board_nr == -1)
-    throw LogException (func_name + "invalid boardname.");
+    throw LogException (func_name + wxT("invalid boardname."));
 
   options.setBoardNr(board_nr);
 
   // level
   Level lvl;
 
-  lvl.nr = (LevelNr) atoi (parts[i++].c_str());
+  lvl.nr = (LevelNr) strToInt (parts[i++].c_str());
 
   if (lvl.nr == USER_DEFINED)
   {
     if (parts.size() != 11 + 5)
-      throw LogException (func_name + "number of parts != 16.");
+      throw LogException (func_name + wxT("number of parts != 16."));
 
-    lvl.height     = atoi (parts[i++].c_str());
-    lvl.width      = atoi (parts[i++].c_str());
-    lvl.deep       = atoi (parts[i++].c_str());
-    lvl.num_mines  = atoi (parts[i++].c_str());
-    lvl.num_wholes = atoi (parts[i++].c_str());
+    lvl.height     = strToInt (parts[i++].c_str());
+    lvl.width      = strToInt (parts[i++].c_str());
+    lvl.deep       = strToInt (parts[i++].c_str());
+    lvl.num_mines  = strToInt (parts[i++].c_str());
+    lvl.num_wholes = strToInt (parts[i++].c_str());
   }
   else
   {
     if (parts.size() != 11)
-      throw LogException (func_name + "number of parts != 11.");
+      throw LogException (func_name + wxT("number of parts != 11."));
   }
   
   if (!options.setLevel(lvl))
-    throw LogException (func_name + "error at setLevel().");
+    throw LogException (func_name + wxT("error at setLevel()."));
 
   // modus + murphys_law
-  options.setModus      ((Modus) atoi (parts[i++].c_str()));
-  options.setMurphysLaw (atoi (parts[i++].c_str()) != 0);
+  options.setModus      ((Modus) strToInt (parts[i++].c_str()));
+  options.setMurphysLaw (strToInt (parts[i++].c_str()) != 0);
 
   // auto_stage, max_stage, show_mines
-  options.setAutoStage (atoi (parts[i++].c_str()));
-  options.setMaxStage  (atoi (parts[i++].c_str()));
-  options.setShowMines (atoi (parts[i++].c_str()) != 0);
+  options.setAutoStage (strToInt (parts[i++].c_str()));
+  options.setMaxStage  (strToInt (parts[i++].c_str()));
+  options.setShowMines (strToInt (parts[i++].c_str()) != 0);
 
   // rand_seq
-  rand_seq = atoi (parts[i++].c_str());
+  rand_seq = strToInt (parts[i++].c_str());
 
   //--- dyn. Informationen ---
 
   wxString log_data = parts[i++];
 
   if (i != parts.size())
-    throw LogException (func_name + "too much parts.");
+    throw LogException (func_name + wxT("too much parts."));
 
   logs.clear();
 
@@ -798,10 +804,10 @@ void Logbook::importStr (const wxString& text)
   int      word_bits = 0;      // belegte Bits von word
 
   if (num_bits + 6 - 1 > 31) // gibt sonst Probleme mit word
-    throw LogException (func_name + "num_bits too large.");
+    throw LogException (func_name + wxT("num_bits too large."));
 
   if (num_bits < 8) // 8 == Logs::Type + Logs::Misc
-    throw LogException (func_name + "num_bits too small.");
+    throw LogException (func_name + wxT("num_bits too small."));
 
   while (true)
   {
@@ -815,7 +821,7 @@ void Logbook::importStr (const wxString& text)
       word_bits += 6;
 
       if (word >= (1 << word_bits))
-        throw LogException (func_name + "word too large.");
+        throw LogException (func_name + wxT("word too large."));
     }
 
     if (k >= log_data.size())

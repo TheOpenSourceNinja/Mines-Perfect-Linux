@@ -23,6 +23,7 @@
 #include <string>
 #include <fstream>
 #include <list>
+#include <wx/string.h>
 
 using namespace std;
 
@@ -77,7 +78,7 @@ typedef int  StageNr;
 {
   public:
 
-    virtual bool isValidChar   (char          ch,  wxString* errtext = 0) = 0;
+    virtual bool isValidChar   (wxChar          ch,  wxString* errtext = 0) = 0;
     bool         isValidString (const wxString& str, wxString* errtext = 0);
 
   protected:
@@ -93,13 +94,13 @@ typedef int  StageNr;
 
   struct NameChecker : public StringChecker
   {
-      bool isValidChar       (char ch,           wxString* errtext = 0);
+      bool isValidChar       (wxChar ch,           wxString* errtext = 0);
       bool isValidStringBase (const wxString& str, wxString* errtext = 0);
   };
 
   struct PasswordChecker : public StringChecker
   {
-      bool isValidChar       (char ch,           wxString* errtext = 0);
+      bool isValidChar       (wxChar ch,           wxString* errtext = 0);
       bool isValidStringBase (const wxString& str, wxString* errtext = 0);
   };
 

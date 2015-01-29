@@ -40,15 +40,15 @@ SmileyCtrl::SmileyCtrl (Ctrl* parent, GameCtrl* game)
   if (s_smiley_happy_bmp == 0)
   {
     // Bitmaps initialisieren
-    s_smiley_happy_bmp    = CreateBitmap ("smiley", "happy"    );
-    s_smiley_1eye_bmp     = CreateBitmap ("smiley", "1eye"     );
-    s_smiley_2eyes_bmp    = CreateBitmap ("smiley", "2eyes"    );
-    s_smiley_3eyes_bmp    = CreateBitmap ("smiley", "3eyes"    );
-    s_smiley_4eyes_bmp    = CreateBitmap ("smiley", "4eyes"    );
-    s_smiley_norm_bmp     = CreateBitmap ("smiley", "norm"     );
-    s_smiley_ooh_bmp      = CreateBitmap ("smiley", "ooh"      );
-    s_smiley_worry_bmp    = CreateBitmap ("smiley", "worry"    );
-    s_smiley_sunglass_bmp = CreateBitmap ("smiley", "sunglass" );
+    s_smiley_happy_bmp    = CreateBitmap (wxT("smiley"), wxT("happy")    );
+    s_smiley_1eye_bmp     = CreateBitmap (wxT("smiley"), wxT("1eye")     );
+    s_smiley_2eyes_bmp    = CreateBitmap (wxT("smiley"), wxT("2eyes")    );
+    s_smiley_3eyes_bmp    = CreateBitmap (wxT("smiley"), wxT("3eyes")    );
+    s_smiley_4eyes_bmp    = CreateBitmap (wxT("smiley"), wxT("4eyes")    );
+    s_smiley_norm_bmp     = CreateBitmap (wxT("smiley"), wxT("norm")     );
+    s_smiley_ooh_bmp      = CreateBitmap (wxT("smiley"), wxT("ooh")      );
+    s_smiley_worry_bmp    = CreateBitmap (wxT("smiley"), wxT("worry")    );
+    s_smiley_sunglass_bmp = CreateBitmap (wxT("smiley"), wxT("sunglass") );
 
     // check size
     ASSERT (s_smiley_happy_bmp->getSize() == s_smiley_1eye_bmp->getSize());
