@@ -6,8 +6,8 @@ OBJ  = app.o api.o dialogs.o ../core/board.o ../core/eqs.o ../core/linux-compati
 LIBS = -lm -lstdc++ -L/usr/lib/x86_64-linux-gnu -pthread -Wl,-Bsymbolic-functions -Wl,-z,relro  -L/usr/lib/x86_64-linux-gnu   -lwx_gtk2u_richtext-2.8 -lwx_gtk2u_aui-2.8 -lwx_gtk2u_xrc-2.8 -lwx_gtk2u_qa-2.8 -lwx_gtk2u_html-2.8 -lwx_gtk2u_adv-2.8 -lwx_gtk2u_core-2.8 -lwx_baseu_xml-2.8 -lwx_baseu_net-2.8 -lwx_baseu-2.8
 
 INCS =  -I"/usr/include/wx-2.8/" -I"/usr/lib/x86_64-linux-gnu/wx/include/gtk2-unicode-release-2.8"
-BIN  = "mineperf"
-CFLAGS = $(INCS) -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D__WXGTK__ -DLINUX -DwxUSE_UNICODE=1 -fno-exceptions -fstrict-aliasing -Wall -fexceptions -s -pthread -Wno-write-strings -D_VARIANT_=4 # I (James) cannot find any info about _VARIANT_ except that it is used when saving/loading log files. The Windows binary from SourceForge (version 1.4.0) uses _VARIANT_=3; since I'm making a fork, I decided to up it to 4.
+BIN  = "mineperf.elf"
+CFLAGS = $(INCS) -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D__WXGTK__ -DLINUX -DwxUSE_UNICODE=1 -fno-exceptions -fstrict-aliasing -Wall -fexceptions -ggdb -pthread -Wno-write-strings -D_VARIANT_=4 # I (James) cannot find any info about _VARIANT_ except that it is used when saving/loading log files. The Windows binary from SourceForge (version 1.4.0) uses _VARIANT_=3; since I'm making a fork, I decided to up it to 4.
 
 all : $(OBJ)
 	$(CC) $(OBJ) -o $(BIN) $(RES) $(LIBS) $(CFLAGS)
@@ -73,3 +73,5 @@ clean :
 	rm -f ./*.o
 	rm -f ../core/*.o
 	rm -f ../gui/*.o
+
+cleanall : clean #Code::Blocks uses cleanall

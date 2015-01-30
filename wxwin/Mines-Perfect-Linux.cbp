@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Mines-Perfect-Linux" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="all">
+				<Option output="mineperf" prefix_auto="1" extension_auto="1" />
+				<Option object_output="/home/james/Programming/Mines-Perfect-Linux/.objs" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="../core/api.h" />
+		<Unit filename="../core/board.cpp" />
+		<Unit filename="../core/board.h" />
+		<Unit filename="../core/cell.h" />
+		<Unit filename="../core/eqs.cpp" />
+		<Unit filename="../core/eqs.h" />
+		<Unit filename="../core/linux-compatibility.cpp" />
+		<Unit filename="../core/linux-compatibility.h" />
+		<Unit filename="../core/logbook.cpp" />
+		<Unit filename="../core/logbook.h" />
+		<Unit filename="../core/options.cpp" />
+		<Unit filename="../core/options.h" />
+		<Unit filename="../core/perfana.cpp" />
+		<Unit filename="../core/perfana.h" />
+		<Unit filename="../core/utils.cpp" />
+		<Unit filename="../core/utils.h" />
+		<Unit filename="../core/vargroup.cpp" />
+		<Unit filename="../core/vargroup.h" />
+		<Unit filename="../gui/bevelctrl.cpp" />
+		<Unit filename="../gui/bevelctrl.h" />
+		<Unit filename="../gui/bitmapctrl.cpp" />
+		<Unit filename="../gui/bitmapctrl.h" />
+		<Unit filename="../gui/boardctrl.cpp" />
+		<Unit filename="../gui/boardctrl.h" />
+		<Unit filename="../gui/buttonctrl.cpp" />
+		<Unit filename="../gui/buttonctrl.h" />
+		<Unit filename="../gui/ctrl.cpp" />
+		<Unit filename="../gui/ctrl.h" />
+		<Unit filename="../gui/gamectrl.cpp" />
+		<Unit filename="../gui/gamectrl.h" />
+		<Unit filename="../gui/lcdctrl.cpp" />
+		<Unit filename="../gui/lcdctrl.h" />
+		<Unit filename="../gui/smileyctrl.cpp" />
+		<Unit filename="../gui/smileyctrl.h" />
+		<Unit filename="Makefile" />
+		<Unit filename="Rsrc.rc" />
+		<Unit filename="api.cpp" />
+		<Unit filename="app.cpp" />
+		<Unit filename="app.h" />
+		<Unit filename="dialogs.cpp" />
+		<Unit filename="dialogs.h" />
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<lib_finder disable_auto="1" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
