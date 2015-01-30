@@ -1,94 +1,64 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="all" />
-	<File name="../core/utils.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../gui/gamectrl.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1002" topLine="3" />
+			<Cursor1 position="8711" topLine="222" />
 		</Cursor>
 		<Folding>
+			<Collapse line="763" />
+			<Collapse line="765" />
+			<Collapse line="769" />
+		</Folding>
+	</File>
+	<File name="../core/linux-compatibility.cpp" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1050" topLine="20" />
+		</Cursor>
+		<Folding>
+			<Collapse line="28" />
 			<Collapse line="32" />
-			<Collapse line="41" />
-			<Collapse line="62" />
-			<Collapse line="82" />
-			<Collapse line="99" />
-			<Collapse line="128" />
-			<Collapse line="144" />
+			<Collapse line="47" />
+			<Collapse line="51" />
 		</Folding>
 	</File>
-	<File name="../core/api.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../core/options.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="955" topLine="0" />
+			<Cursor1 position="6334" topLine="165" />
 		</Cursor>
 	</File>
-	<File name="../core/logbook.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../gui/ctrl.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="24729" topLine="26" />
+			<Cursor1 position="1527" topLine="22" />
 		</Cursor>
-		<Folding>
-			<Collapse line="40" />
-			<Collapse line="42" />
-			<Collapse line="55" />
-			<Collapse line="71" />
-			<Collapse line="97" />
-			<Collapse line="108" />
-			<Collapse line="145" />
-			<Collapse line="153" />
-			<Collapse line="170" />
-			<Collapse line="179" />
-			<Collapse line="211" />
-			<Collapse line="222" />
-			<Collapse line="240" />
-			<Collapse line="265" />
-			<Collapse line="272" />
-			<Collapse line="281" />
-			<Collapse line="300" />
-			<Collapse line="315" />
-			<Collapse line="328" />
-			<Collapse line="350" />
-			<Collapse line="353" />
-			<Collapse line="357" />
-			<Collapse line="366" />
-			<Collapse line="383" />
-			<Collapse line="391" />
-			<Collapse line="394" />
-			<Collapse line="400" />
-			<Collapse line="423" />
-			<Collapse line="436" />
-			<Collapse line="438" />
-			<Collapse line="448" />
-			<Collapse line="472" />
-			<Collapse line="477" />
-			<Collapse line="479" />
-			<Collapse line="481" />
-			<Collapse line="503" />
-			<Collapse line="510" />
-			<Collapse line="538" />
-			<Collapse line="557" />
-			<Collapse line="568" />
-			<Collapse line="581" />
-			<Collapse line="594" />
-			<Collapse line="614" />
-			<Collapse line="646" />
-			<Collapse line="654" />
-			<Collapse line="670" />
-			<Collapse line="687" />
-			<Collapse line="713" />
-			<Collapse line="723" />
-			<Collapse line="756" />
-			<Collapse line="767" />
-			<Collapse line="812" />
-			<Collapse line="814" />
-		</Folding>
 	</File>
-	<File name="../core/perfana.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../gui/ctrl.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1120" topLine="35" />
+			<Cursor1 position="5539" topLine="75" />
 		</Cursor>
 		<Folding>
-			<Collapse line="32" />
-			<Collapse line="59" />
-			<Collapse line="60" />
+			<Collapse line="26" />
+			<Collapse line="34" />
+			<Collapse line="37" />
+			<Collapse line="48" />
+			<Collapse line="50" />
+			<Collapse line="63" />
+			<Collapse line="75" />
+			<Collapse line="87" />
+			<Collapse line="107" />
+			<Collapse line="109" />
+			<Collapse line="133" />
+			<Collapse line="142" />
+			<Collapse line="157" />
+			<Collapse line="185" />
+			<Collapse line="188" />
+			<Collapse line="195" />
 		</Folding>
+	</File>
+	<File name="../gui/gamectrl.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2681" topLine="63" />
+		</Cursor>
 	</File>
 	<File name="../core/vargroup.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
@@ -156,12 +126,12 @@
 			<Collapse line="909" />
 		</Folding>
 	</File>
-	<File name="../core/eqs.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../core/options.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3244" topLine="87" />
+			<Cursor1 position="8245" topLine="252" />
 		</Cursor>
 	</File>
-	<File name="../core/board.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../core/board.h" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="876" topLine="0" />
 		</Cursor>
@@ -182,83 +152,33 @@
 			<Collapse line="189" />
 		</Folding>
 	</File>
-	<File name="../gui/gamectrl.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../core/utils.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="14624" topLine="426" />
+			<Cursor1 position="1002" topLine="3" />
 		</Cursor>
 		<Folding>
-			<Collapse line="763" />
-			<Collapse line="765" />
-			<Collapse line="769" />
-		</Folding>
-	</File>
-	<File name="../gui/lcdctrl.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1754" topLine="37" />
-		</Cursor>
-		<Folding>
-			<Collapse line="65" />
-			<Collapse line="75" />
-		</Folding>
-	</File>
-	<File name="app.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1900" topLine="43" />
-		</Cursor>
-	</File>
-	<File name="../core/cell.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="0" topLine="27" />
-		</Cursor>
-		<Folding>
-			<Collapse line="49" />
-			<Collapse line="59" />
-			<Collapse line="70" />
-			<Collapse line="83" />
-			<Collapse line="84" />
-			<Collapse line="111" />
-			<Collapse line="114" />
-			<Collapse line="117" />
-		</Folding>
-	</File>
-	<File name="../core/linux-compatibility.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1050" topLine="20" />
-		</Cursor>
-		<Folding>
-			<Collapse line="28" />
 			<Collapse line="32" />
-			<Collapse line="47" />
-			<Collapse line="51" />
+			<Collapse line="41" />
+			<Collapse line="62" />
+			<Collapse line="82" />
+			<Collapse line="99" />
+			<Collapse line="128" />
+			<Collapse line="144" />
 		</Folding>
+	</File>
+	<File name="../core/eqs.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3244" topLine="87" />
+		</Cursor>
 	</File>
 	<File name="Makefile" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1026" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="../core/options.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="api.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="8245" topLine="252" />
-		</Cursor>
-	</File>
-	<File name="../core/linux-compatibility.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1058" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="app.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="16585" topLine="347" />
-		</Cursor>
-		<Folding>
-			<Collapse line="161" />
-			<Collapse line="284" />
-		</Folding>
-	</File>
-	<File name="api.cpp" open="1" top="1" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="18136" topLine="323" />
+			<Cursor1 position="14961" topLine="309" />
 		</Cursor>
 		<Folding>
 			<Collapse line="54" />
@@ -285,36 +205,27 @@
 			<Collapse line="452" />
 			<Collapse line="462" />
 			<Collapse line="469" />
-			<Collapse line="477" />
-			<Collapse line="484" />
-			<Collapse line="491" />
 			<Collapse line="501" />
 			<Collapse line="509" />
-			<Collapse line="515" />
-			<Collapse line="519" />
-			<Collapse line="532" />
-			<Collapse line="539" />
-			<Collapse line="581" />
-			<Collapse line="611" />
-			<Collapse line="625" />
-			<Collapse line="642" />
-			<Collapse line="650" />
-			<Collapse line="659" />
-			<Collapse line="675" />
-			<Collapse line="686" />
-			<Collapse line="693" />
-			<Collapse line="701" />
-			<Collapse line="707" />
-			<Collapse line="718" />
-			<Collapse line="730" />
+			<Collapse line="614" />
+			<Collapse line="628" />
+			<Collapse line="645" />
+			<Collapse line="653" />
+			<Collapse line="662" />
+			<Collapse line="678" />
+			<Collapse line="689" />
+			<Collapse line="696" />
+			<Collapse line="704" />
+			<Collapse line="710" />
+			<Collapse line="721" />
+			<Collapse line="733" />
 		</Folding>
 	</File>
-	<File name="../core/board.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../core/board.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="38550" topLine="348" />
+			<Cursor1 position="61186" topLine="189" />
 		</Cursor>
 		<Folding>
-			<Collapse line="45" />
 			<Collapse line="62" />
 			<Collapse line="71" />
 			<Collapse line="79" />
@@ -322,6 +233,7 @@
 			<Collapse line="115" />
 			<Collapse line="122" />
 			<Collapse line="127" />
+			<Collapse line="136" />
 			<Collapse line="138" />
 			<Collapse line="147" />
 			<Collapse line="182" />
@@ -378,6 +290,7 @@
 			<Collapse line="702" />
 			<Collapse line="708" />
 			<Collapse line="710" />
+			<Collapse line="725" />
 			<Collapse line="728" />
 			<Collapse line="736" />
 			<Collapse line="744" />
@@ -417,6 +330,7 @@
 			<Collapse line="1160" />
 			<Collapse line="1169" />
 			<Collapse line="1178" />
+			<Collapse line="1192" />
 			<Collapse line="1197" />
 			<Collapse line="1205" />
 			<Collapse line="1213" />
@@ -506,8 +420,6 @@
 			<Collapse line="2134" />
 			<Collapse line="2146" />
 			<Collapse line="2158" />
-			<Collapse line="2180" />
-			<Collapse line="2183" />
 			<Collapse line="2197" />
 			<Collapse line="2201" />
 			<Collapse line="2209" />
@@ -569,16 +481,10 @@
 			<Collapse line="2754" />
 		</Folding>
 	</File>
-	<File name="../core/logbook.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../core/logbook.cpp" open="1" top="1" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3646" topLine="82" />
+			<Cursor1 position="13442" topLine="326" />
 		</Cursor>
-		<Folding>
-			<Collapse line="90" />
-			<Collapse line="109" />
-			<Collapse line="115" />
-			<Collapse line="120" />
-		</Folding>
 	</File>
 	<File name="../gui/boardctrl.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
@@ -589,187 +495,49 @@
 			<Collapse line="60" />
 		</Folding>
 	</File>
-	<File name="../core/eqs.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../core/api.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="34675" topLine="136" />
+			<Cursor1 position="3161" topLine="54" />
 		</Cursor>
 		<Folding>
-			<Collapse line="38" />
-			<Collapse line="40" />
-			<Collapse line="53" />
-			<Collapse line="60" />
-			<Collapse line="67" />
-			<Collapse line="80" />
-			<Collapse line="87" />
-			<Collapse line="96" />
-			<Collapse line="102" />
-			<Collapse line="104" />
-			<Collapse line="113" />
-			<Collapse line="115" />
-			<Collapse line="118" />
-			<Collapse line="129" />
-			<Collapse line="133" />
-			<Collapse line="155" />
-			<Collapse line="157" />
-			<Collapse line="160" />
-			<Collapse line="162" />
-			<Collapse line="174" />
-			<Collapse line="177" />
-			<Collapse line="203" />
-			<Collapse line="217" />
-			<Collapse line="223" />
-			<Collapse line="248" />
-			<Collapse line="268" />
-			<Collapse line="304" />
-			<Collapse line="315" />
-			<Collapse line="321" />
-			<Collapse line="328" />
-			<Collapse line="330" />
-			<Collapse line="332" />
-			<Collapse line="340" />
-			<Collapse line="342" />
-			<Collapse line="351" />
-			<Collapse line="353" />
-			<Collapse line="369" />
-			<Collapse line="371" />
-			<Collapse line="381" />
-			<Collapse line="388" />
-			<Collapse line="396" />
-			<Collapse line="412" />
-			<Collapse line="418" />
-			<Collapse line="428" />
-			<Collapse line="430" />
-			<Collapse line="434" />
-			<Collapse line="447" />
-			<Collapse line="453" />
-			<Collapse line="463" />
-			<Collapse line="465" />
-			<Collapse line="469" />
-			<Collapse line="486" />
-			<Collapse line="498" />
-			<Collapse line="503" />
-			<Collapse line="508" />
-			<Collapse line="515" />
-			<Collapse line="538" />
-			<Collapse line="554" />
-			<Collapse line="571" />
-			<Collapse line="595" />
-			<Collapse line="617" />
-			<Collapse line="619" />
-			<Collapse line="624" />
-			<Collapse line="634" />
-			<Collapse line="652" />
-			<Collapse line="658" />
-			<Collapse line="666" />
-			<Collapse line="692" />
-			<Collapse line="724" />
-			<Collapse line="738" />
-			<Collapse line="750" />
-			<Collapse line="753" />
-			<Collapse line="765" />
-			<Collapse line="771" />
-			<Collapse line="780" />
-			<Collapse line="787" />
-			<Collapse line="802" />
-			<Collapse line="821" />
-			<Collapse line="830" />
-			<Collapse line="841" />
-			<Collapse line="874" />
-			<Collapse line="897" />
-			<Collapse line="902" />
-			<Collapse line="907" />
-			<Collapse line="943" />
-			<Collapse line="946" />
-			<Collapse line="954" />
-			<Collapse line="956" />
-			<Collapse line="976" />
-			<Collapse line="981" />
-			<Collapse line="989" />
-			<Collapse line="991" />
-			<Collapse line="993" />
-			<Collapse line="1018" />
-			<Collapse line="1023" />
-			<Collapse line="1031" />
-			<Collapse line="1033" />
-			<Collapse line="1035" />
-			<Collapse line="1074" />
-			<Collapse line="1093" />
-			<Collapse line="1111" />
-			<Collapse line="1129" />
-			<Collapse line="1131" />
-			<Collapse line="1140" />
-			<Collapse line="1153" />
-			<Collapse line="1181" />
-			<Collapse line="1194" />
-			<Collapse line="1206" />
-			<Collapse line="1211" />
-			<Collapse line="1213" />
-			<Collapse line="1226" />
-			<Collapse line="1258" />
-			<Collapse line="1275" />
-			<Collapse line="1289" />
-			<Collapse line="1300" />
-			<Collapse line="1313" />
-			<Collapse line="1322" />
-			<Collapse line="1333" />
-			<Collapse line="1338" />
-			<Collapse line="1344" />
-			<Collapse line="1351" />
-			<Collapse line="1374" />
-			<Collapse line="1382" />
+			<Collapse line="37" />
+			<Collapse line="50" />
+			<Collapse line="72" />
+			<Collapse line="88" />
 		</Folding>
 	</File>
-	<File name="../core/perfana.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../core/eqs.cpp" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3744" topLine="87" />
+			<Cursor1 position="29994" topLine="1066" />
 		</Cursor>
-		<Folding>
-			<Collapse line="65" />
-			<Collapse line="161" />
-			<Collapse line="168" />
-			<Collapse line="173" />
-			<Collapse line="182" />
-			<Collapse line="219" />
-			<Collapse line="221" />
-		</Folding>
 	</File>
 	<File name="../core/vargroup.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="8935" topLine="250" />
 		</Cursor>
 	</File>
-	<File name="../core/options.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="../core/perfana.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="6334" topLine="165" />
-		</Cursor>
-	</File>
-	<File name="../gui/ctrl.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1527" topLine="22" />
-		</Cursor>
-	</File>
-	<File name="../gui/ctrl.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="5539" topLine="75" />
+			<Cursor1 position="3494" topLine="80" />
 		</Cursor>
 		<Folding>
-			<Collapse line="26" />
-			<Collapse line="34" />
-			<Collapse line="37" />
-			<Collapse line="48" />
-			<Collapse line="50" />
-			<Collapse line="63" />
-			<Collapse line="75" />
-			<Collapse line="87" />
-			<Collapse line="107" />
-			<Collapse line="109" />
-			<Collapse line="133" />
-			<Collapse line="142" />
-			<Collapse line="157" />
-			<Collapse line="185" />
-			<Collapse line="188" />
-			<Collapse line="195" />
+			<Collapse line="53" />
+			<Collapse line="88" />
+			<Collapse line="97" />
+			<Collapse line="129" />
+			<Collapse line="239" />
+			<Collapse line="241" />
 		</Folding>
+	</File>
+	<File name="../gui/lcdctrl.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2319" topLine="17" />
+		</Cursor>
+	</File>
+	<File name="../core/linux-compatibility.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1278" topLine="6" />
+		</Cursor>
 	</File>
 	<File name="dialogs.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
@@ -814,5 +582,55 @@
 			<Collapse line="704" />
 			<Collapse line="719" />
 		</Folding>
+	</File>
+	<File name="app.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="7929" topLine="208" />
+		</Cursor>
+		<Folding>
+			<Collapse line="161" />
+			<Collapse line="284" />
+		</Folding>
+	</File>
+	<File name="../core/perfana.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1120" topLine="35" />
+		</Cursor>
+		<Folding>
+			<Collapse line="32" />
+			<Collapse line="59" />
+			<Collapse line="60" />
+		</Folding>
+	</File>
+	<File name="../core/cell.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="27" />
+		</Cursor>
+		<Folding>
+			<Collapse line="49" />
+			<Collapse line="59" />
+			<Collapse line="70" />
+			<Collapse line="83" />
+			<Collapse line="84" />
+			<Collapse line="111" />
+			<Collapse line="114" />
+			<Collapse line="117" />
+		</Folding>
+	</File>
+	<File name="../core/logbook.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3646" topLine="82" />
+		</Cursor>
+		<Folding>
+			<Collapse line="90" />
+			<Collapse line="109" />
+			<Collapse line="115" />
+			<Collapse line="120" />
+		</Folding>
+	</File>
+	<File name="app.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1900" topLine="0" />
+		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

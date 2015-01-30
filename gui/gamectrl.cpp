@@ -220,7 +220,7 @@ void GameCtrl::alignCtrls()
 void GameCtrl::showTime (int secs)
 //------------------------------------------------------------------------------
 {
-  if (secs >= MAX_SECS)
+  if (secs > MAX_SECS)
     secs = MAX_SECS;
   
   int  val;

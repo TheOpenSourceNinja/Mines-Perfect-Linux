@@ -73,3 +73,10 @@
     return atoi( str.c_str() );
   }
 #endif
+
+unsigned long long getTime() {
+  timespec t;
+  clock_gettime( CLOCK_MONOTONIC, &t );
+  unsigned long long result = ( t.tv_sec * 1000000 ) + t.tv_nsec;
+  return result;
+}

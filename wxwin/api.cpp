@@ -483,16 +483,16 @@ public:
 
   int getMSecs() const
   { 
-    clock_t c1 = isRunning() ? clock() : clock1;
+    unsigned long long c1 = isRunning() ? getTime() : clock1;
 
-    return 1000 * (c1 - clock0) / CLK_TCK; 
+    return 1000 * (c1 - clock0) / CLOCKS_PER_SEC; 
   }
 
   clock_t start()
   {
     reset();
-    clock0 = clock();
-    wxTimer::Start(100); // alle 100 ms
+    clock0 = getTime();
+    wxTimer::Start(100, false); // alle 100 ms
                 // muss kuerzer als eine Sekunde sein, da wxTimer recht ungenau 
                 // ist. Bei 900 ms laeuft die Uhr sehr unruhig.
     return clock0;
@@ -500,7 +500,7 @@ public:
   
   void stop()
   {
-    clock1 = clock();
+    clock1 = getTime();
 
     if (wxTimer::IsRunning())
       wxTimer::Stop();
@@ -514,18 +514,21 @@ public:
   
   void Notify()          
   { 
-    int num2 = (clock() - clock0) / CLK_TCK;
+  	unsigned long long now = getTime();
+  	unsigned long long diff = now - clock0;
+  	unsigned long long cps = CLOCKS_PER_SEC;
+    int num2 = diff / cps;
 
-    if (num_notifies != num2)
-    {
+    //if (num_notifies != num2)
+    //{
       num_notifies = num2;
       main_win->game->showTime(num_notifies);  
-    }
+    //}
   }
 
 private:  
-  clock_t  clock0;
-  clock_t  clock1;
+  unsigned long long  clock0;
+  unsigned long long  clock1;
   int      num_notifies;
 };
 

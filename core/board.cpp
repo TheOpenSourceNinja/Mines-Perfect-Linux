@@ -1755,7 +1755,7 @@ struct BoardReadError
 //------------------------------------------------------------------------------
 {
   poss_oot_nr = -1;
-  clock0      = clock();
+  clock0      = getTime();
 
   // Variablen setzen
   num_flagged_cells =  0;
@@ -1879,7 +1879,7 @@ struct BoardReadError
 //------------------------------------------------------------------------------
 {
   poss_oot_nr = -1;
-  clock0      = clock();
+  clock0      = getTime();
 
   if (gameOver())
     return;
@@ -1899,7 +1899,7 @@ struct BoardReadError
 //------------------------------------------------------------------------------
 {
   poss_oot_nr = -1;
-  clock0      = clock();
+  clock0      = getTime();
 
   if (mod != ORIGINAL && mod != IMMUNE && mod != HINTS && mod != LUCKY
   &&  mod != STARTUP)
@@ -1920,7 +1920,7 @@ struct BoardReadError
 //------------------------------------------------------------------------------
 {
   poss_oot_nr = -1;
-  clock0      = clock();
+  clock0      = getTime();
 
   if (stage < 0 || 3 < stage || stage == auto_stage)
     return false;
@@ -1944,7 +1944,7 @@ struct BoardReadError
 //------------------------------------------------------------------------------
 {
   poss_oot_nr = -1;
-  clock0      = clock();
+  clock0      = getTime();
 
   if (stage < 1 || 3 < stage || stage == max_stage)
     return false;
@@ -2010,7 +2010,7 @@ struct BoardReadError
 //------------------------------------------------------------------------------
 {
   poss_oot_nr = -1;
-  clock0      = clock();
+  clock0      = getTime();
 
   if (gameOver() || cellIsFlagged(k))
     return false;
@@ -2124,7 +2124,7 @@ struct BoardReadError
 //------------------------------------------------------------------------------
 {
   poss_oot_nr = -1;
-  clock0      = clock();
+  clock0      = getTime();
 
   if (gameOver())
     return false;
@@ -2182,7 +2182,7 @@ struct BoardReadError
   // not playing
   if (!logbook.isPlaying())
   {
-    int  used_time = (clock() - clock0) * 1000 / CLK_TCK;
+    int  used_time = (getTime() - clock0) / 1000; //(clock() - clock0) * 1000 / CLOCKS_PER_SEC;
 
     if (used_time >= max_time_multi)
       return 0; // Zeit abgelaufen
@@ -2401,7 +2401,7 @@ struct BoardReadError
 //------------------------------------------------------------------------------
 {
   poss_oot_nr = -1;
-  clock0      = clock();
+  clock0      = getTime();
   
   if (gameOver())
     return;
@@ -2575,7 +2575,7 @@ struct BoardReadError
 //------------------------------------------------------------------------------
 {
   poss_oot_nr = -1;
-  clock0      = clock();
+  clock0      = getTime();
 
   if (gameOver())
   {

@@ -157,7 +157,7 @@ Logbook::Logbook (uint32 ran, const Options& opt)
   is_playing = false;
   play_index = 0;
   cur_index  = 0;
-  clock0     = clock();
+  clock0     = getTime();
 
   logs.clear();
 
@@ -319,7 +319,7 @@ void Logbook::startPlaying (void)
 
   play_index = 0;
   is_playing = true;
-  clock0 = clock(); // Zeit synchronisieren
+  clock0 = getTime(); // Zeit synchronisieren
 }
 
 //******************************************************************************
@@ -341,7 +341,7 @@ void Logbook::operator>> (Log& log)
     log.write (AUTO_LOG_FNAME); // auto_log protokolliert auch das Lesen.
 
   // Zeit synchronisieren
-  clock0 = clock() - log.time1 * CLK_TCK / 1000;
+  clock0 = getTime() - log.time1 * 1000; //clock() - log.time1 * CLOCKS_PER_SEC / 1000;
 }
 
 //******************************************************************************
@@ -394,12 +394,12 @@ void Logbook::operator<< (const Log& log)
     if (log.name == LOG_START_TIMER)
     {
       // Hier wird die clock0-Zeit vom Timer uebergeben
-      log2.time1 = (log.val - clock0) * 1000 / CLK_TCK;
+      log2.time1 = (log.val - clock0) * 1000 / CLOCKS_PER_SEC;
       log2.val    = 0; // Wert steckt schon in time1
     }
     else
     {
-      log2.time1 = (clock() - clock0) * 1000 / CLK_TCK;
+      log2.time1 = (getTime() - clock0) / 1000;// (clock() - clock0) * 1000 / CLOCKS_PER_SEC;
     }
 
     if (log2.time1 == 0)
@@ -547,7 +547,7 @@ bool Logbook::redo (Log& log)
          && (!logs[cur_index].valid || log.isComputerLog()));
   
   // Zeit synchronisieren
-  clock0 = clock() - log.time1 * CLK_TCK / 1000;
+  clock0 = getTime() - log.time1 * 1000;//clock() - log.time1 * CLOCKS_PER_SEC / 1000;
   
   return true;
 }

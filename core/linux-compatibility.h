@@ -20,9 +20,7 @@
 #define LINUX_COMPATIBILITY_H_INCLUDED
 
 #include <stdio.h> //for the itoa() replacement
-#include <time.h> //for CLOCKS_PER_SEC
-
-#define CLK_TCK CLOCKS_PER_SEC
+#include <time.h> //for getTime()
 
 #include <wx/string.h>
 
@@ -31,5 +29,9 @@ wxString intToStr( int value, wchar_t* str, int base );
 
 //replacement for atoi()
 int strToInt( wxString str );
+
+//replacement for clock()
+//Returns time in nanoseconds
+unsigned long long getTime(); //Needs at least the same precision as clock_t, which is implementation-defined
 
 #endif

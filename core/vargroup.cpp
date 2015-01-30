@@ -42,6 +42,7 @@ using namespace std;
 #include "eqs.h"
 #include "api.h"
 #include "perfana.h"
+#include "linux-compatibility.h"
 
 using namespace MinesPerfect;
 
@@ -807,7 +808,7 @@ bool VarGroup::solve (SolSums* permit_sums) // (ok)
 {
   PERF_ANA (wxT("VarGroup::solve"));
 
-  if (eqs->diff_clock >= 0 && clock() - eqs->clock0 > eqs->diff_clock)
+  if (eqs->diff_clock >= 0 && getTime() - eqs->clock0 > eqs->diff_clock)
     throw OutOfTime();
 
   vector<Var*>   ties;

@@ -98,7 +98,7 @@ Perf::Perf (const int fnr)
 {
   func_nr   = fnr;
 
-  clock0    = clock();
+  clock0    = getTime();
   ASSERT (clock0 != -1);
 
   is_static = false;
@@ -114,11 +114,11 @@ Perf::~Perf()
   if (is_static || !Glob::perfana_on)
     return;
 
-  clock_t   clock1 = clock();
+  unsigned long long   clock1 = getTime();
 
   ASSERT (clock0 != -1);
   
-  ulong     total  = (ulong) ((1000000.0 / CLK_TCK) * (clock1 - clock0));
+  ulong     total  = (ulong) ((1000000.0 / CLOCKS_PER_SEC) * (clock1 - clock0));
   int       fnr    = call_stack.back();
   call_stack.pop_back();
   if (functions[fnr].rec_level == 1)

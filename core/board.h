@@ -71,7 +71,7 @@ private:
     Eqs*               eqs_visible; // ??? eqs_extern
     Eqs*               eqs_real;    // ??? eqs_intern
     int                poss_oot_nr; // Zaehler aus dem die oot_nr bestimmt wird
-    clock_t            clock0;      //
+    unsigned long long            clock0;      //
     bool               multi_solve;
 
     // Funktionen
