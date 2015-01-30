@@ -35,7 +35,8 @@ LcdCtrl::LcdCtrl(Ctrl* parent)
   // nocht nicht initialisiert?
   if (s_minus_bmp == 0)
   {
-    wxChar      buf[20];
+  	unsigned short bufSize = 20;
+    wxChar      buf[bufSize];
     unsigned  i;  // visual studio
 
     // initialisieren
@@ -44,7 +45,7 @@ LcdCtrl::LcdCtrl(Ctrl* parent)
     for (i = 0; i < sizeof (s_digit_bmps) / sizeof (*s_digit_bmps); i++)
     {
       #ifdef wxUSE_UNICODE
-        swprintf (buf, i, wxT("%i"));
+        swprintf (buf, bufSize, wxT("%i"), i);
       #else
         sprintf (buf, wxT("%i"), i);
       #endif

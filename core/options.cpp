@@ -28,6 +28,13 @@
 
 #include "linux-compatibility.h"
 
+#ifdef wxUSE_UNICODE
+  #include <cwctype>
+  #define isalnum iswalnum
+#else
+  #include <cctype>
+#endif // wxUSE_UNICODE
+
 using namespace std;
 
 #include "options.h"
@@ -74,7 +81,7 @@ const wxChar INI_FNAME[] = wxT("mineperf.ini");
   bool User::NameChecker::isValidChar (wxChar ch, wxString* errtext)
 //------------------------------------------------------------------------------
 {
-  if (isalnum(ch) || ch == '-' || ch == '_')
+  if (isalnum(ch) || ch == wxT('-') || ch == wxT('_'))
   {
     return true; // valid
   }
@@ -158,30 +165,30 @@ const wxChar INI_FNAME[] = wxT("mineperf.ini");
   int chksum = 0;
   
   for (unsigned i = 0; i < records[nr].name.size(); ++i)
-    if (records[nr].name[i] != ' ')
+    if (records[nr].name[i] != wxT(' '))
       ModChecksum (chksum, tolower(records[nr].name[i]));
-  ModChecksum (chksum, ' ');
+  ModChecksum (chksum, wxT(' '));
 
   if (version >= 140)
   {
-    ModChecksum (chksum, records[nr].time / 100000 % 10 + '0');
-    ModChecksum (chksum, records[nr].time /  10000 % 10 + '0');
-    ModChecksum (chksum, records[nr].time /   1000 % 10 + '0');
+    ModChecksum (chksum, records[nr].time / 100000 % 10 + wxT('0'));
+    ModChecksum (chksum, records[nr].time /  10000 % 10 + wxT('0'));
+    ModChecksum (chksum, records[nr].time /   1000 % 10 + wxT('0'));
   }
-  ModChecksum (chksum, records[nr].time / 100 % 10 + '0');
-  ModChecksum (chksum, records[nr].time /  10 % 10 + '0');
-  ModChecksum (chksum, records[nr].time /   1 % 10 + '0');
-  ModChecksum (chksum, ' ');
+  ModChecksum (chksum, records[nr].time / 100 % 10 + wxT('0'));
+  ModChecksum (chksum, records[nr].time /  10 % 10 + wxT('0'));
+  ModChecksum (chksum, records[nr].time /   1 % 10 + wxT('0'));
+  ModChecksum (chksum, wxT(' '));
   
-  ModChecksum (chksum, nr + '0');
-  ModChecksum (chksum, ' ');
+  ModChecksum (chksum, nr + wxT('0'));
+  ModChecksum (chksum, wxT(' '));
   
-  ModChecksum (chksum, records[nr].certified_board ? '1' : '0');
-  ModChecksum (chksum, ' ');
+  ModChecksum (chksum, records[nr].certified_board ? wxT('1') : wxT('0'));
+  ModChecksum (chksum, wxT(' '));
   
   { // visual studio
   for (unsigned i = 0; i < name.size(); ++i)
-    if (name[i] != ' ')
+    if (name[i] != wxT(' '))
       ModChecksum (chksum, tolower(name[i]));
   } // visual studio
   

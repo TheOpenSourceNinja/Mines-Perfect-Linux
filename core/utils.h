@@ -23,6 +23,7 @@
 //#include <time.h>
 
 #include <wx/string.h>
+#include <assert.h>
 
 #undef ASSERT
 #define ASSERT(cond) \

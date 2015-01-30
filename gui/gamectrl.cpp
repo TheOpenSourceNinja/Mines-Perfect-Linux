@@ -762,7 +762,7 @@ void GameCtrl::load (const wxString& fname)
   // load
   try
   {
-    if (fname.find(',') == wxString::npos) 
+    if (fname.find(wxT(',')) == wxString::npos) 
     {
       m_logbook->read (fname);
     }
@@ -773,11 +773,11 @@ void GameCtrl::load (const wxString& fname)
       // Der Dateioeffnendialog fuegt am Anfang noch den
       // Pfad und am Ende eine Extension an, diese muessen
       // jetzt wieder entfernt werden
-      wxString::size_type i = fname2.rfind('\\');
+      wxString::size_type i = fname2.rfind(wxT('\\'));
       if (i != wxString::npos)
         fname2 = fname2.substr(i + 1);
 
-      i = fname2.rfind('.');
+      i = fname2.rfind(wxT('.'));
       if (i != wxString::npos)
         fname2 = fname2.substr(0, i);
 

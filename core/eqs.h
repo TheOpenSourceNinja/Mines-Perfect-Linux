@@ -143,7 +143,7 @@ public:
 
   // stat
   void  printStat        (void    ) const;
-  void  logVal           (char res) const;
+  void  logVal           (wxChar res) const;
 
   // dyn.
   Found  findMoves1 (Moves& moves, CellNrs* const hints = 0); // Stage 1

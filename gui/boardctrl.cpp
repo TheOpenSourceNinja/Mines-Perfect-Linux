@@ -52,14 +52,15 @@ void BoardCtrl::initStatic()
   s_symb_quest_bmp = CreateBitmap (wxT("symbol"), wxT("quest"));
   s_symb_mine_bmp  = CreateBitmap (wxT("symbol"), wxT("mine") );
   s_symb_cross_bmp = CreateBitmap (wxT("symbol"), wxT("cross"));
-
-  wxChar      buf[20];
+  
+  unsigned short bufSize = 20;
+  wxChar      buf[bufSize];
   unsigned  i; // visual studio
 
   for (i = 0; i < sizeof (s_symb_digit_bmps) / sizeof (*s_symb_digit_bmps); i++)
   {
      #ifdef wxUSE_UNICODE
-       swprintf (buf, i, wxT("%i"));
+       swprintf (buf, bufSize, wxT("%i"), i);
      #else
        sprintf (buf, wxT("%i"), i);
      #endif

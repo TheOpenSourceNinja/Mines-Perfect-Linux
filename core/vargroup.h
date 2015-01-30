@@ -103,7 +103,7 @@ class  Eqs;
 struct Sols;
 struct SolSums;
 
-typedef map<string,SolSums>                   CombSums;
+typedef map<wxString,SolSums>                   CombSums;
 
 typedef vector<Var*>::iterator                VarIter;
 typedef vector<Var*>::const_iterator          VarCIter;
@@ -280,7 +280,7 @@ private:
   // dyn.
   void        printDyn    (void); // kein const wegen this-Benutzung
   bool        init        (int pass = 1);     // nur dyn.
-  string      calcCombkey (void);
+  wxString      calcCombkey (void);
   int         sumVal      (void);
   void        clearSols   (int the_deep);     // loescht sols[the_deep] rek.
   void        raiseSols   (int to_deep);      // hebt rek. eine Stufe an

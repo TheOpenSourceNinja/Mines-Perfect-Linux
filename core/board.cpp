@@ -109,21 +109,6 @@ struct BoardReadError
   {;}
 };
 
-
-//******************************************************************************
-//  void MsgReadError (int col, int row, wxString text)
-//------------------------------------------------------------------------------
-/*
-{
-  owxStringstream  ost;
-
-  ost << "(" << col << ", " << row << "): " << text;
-
-  Application->MessageBox ((char*) ost.str().c_str(), "Fehler beim Lesen!",
-                           MB_OK + MB_DEFBUTTON1);
-}
-*/
-
 //******************************************************************************
   void Board::readChkVal (int    val,      int val_min, int    val_max,
                           wxString obj_name, int obj_nr,  wxString obj_komp)
@@ -1630,7 +1615,7 @@ struct BoardReadError
   void Board::act (CellNrs& changed_cells, Logbook& logbook)
 //------------------------------------------------------------------------------
 {
-  PERF_ANA ("Board::act");
+  PERF_ANA (wxT("Board::act"));
   
   if (gameIsWon() && num_flagged_cells < num_mines)
   {
@@ -1850,11 +1835,6 @@ struct BoardReadError
 
       if (err.col >= 0 && err.row >= 0)
         ost << wxT("(") << err.row << wxT(",") << err.col << wxT(")");
-
-//      Application->MessageBox ((char*) err.text.c_str(),
-//                               (char*) ost.str().c_str(),
-//                                MB_OK + MB_DEFBUTTON1);
-//      SetSquare (lvl);
 
       throw Exception ((err.text + wxT("\n")) + strstream.GetString());
     }
@@ -2768,35 +2748,36 @@ struct BoardReadError
   void Board::print (void) const
 //------------------------------------------------------------------------------
 {
-  ofstream      out ("board.txt");
+  wxFileOutputStream outFile( wxT("board.txt") );
+  wxTextOutputStream      out ( outFile );
 
   for (CellNr k = 0; k < (CellNr) cells.size(); k++)
   {
-    char  ch;
+    wxChar  ch;
 
     if (cells[k].isOpen())
       if (cells[k].num == 0)
-        ch = '-';
+        ch = wxT('-');
       else
-        ch = (char) ('0' + cells[k].num);
+        ch = (wxChar) (wxT('0') + cells[k].num);
     else if (cells[k].isFlagged())
-      ch = '!';
+      ch = wxT('!');
     else if (cells[k].isMined())
-      ch = '*';
+      ch = wxT('*');
     else
-      ch = '#';
+      ch = wxT('#');
 
     if (cells[k].isSolved())
-      out << ch << '\'';
+      out << ch << wxT('\'');
     else
-      out << ch << ' ';
+      out << ch << wxT(' ');
 
     if (k % print_width == print_width - 1)
-      out << '\n';
+      out << wxT('\n');
   }
 
   if (poss_move.cell_nr != -1)
-    out << "\nposs_moves = { " << poss_move.cell_nr << ", "
-                               << poss_move.new_state << "}" << "\n";
+    out << wxT("\nposs_moves = { ") << poss_move.cell_nr << wxT(", ")
+                               << poss_move.new_state << wxT("}") << wxT("\n");
 }
 

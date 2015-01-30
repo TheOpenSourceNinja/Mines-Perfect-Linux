@@ -25,15 +25,17 @@
 #include <stdio.h>
 #include <iostream> //Needed for cerr
 #include <cstring> //Needed for strlen()
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
 
 #ifdef VISUAL_CPP
   #include <iostream> // visual studio (cerr)
   #include <minmax.h> // visual studio (max)
 #endif
 
-#ifdef LINUX
+//#ifdef LINUX
   #include "linux-compatibility.h"
-#endif
+//#endif
 
 using namespace std;
 
@@ -59,30 +61,30 @@ static ulong  TimeStrLen (ulong time)
 }
 
 //******************************************************************************
-static char*  TimeToA (ulong time, char* const buf, ulong len)
+static wxChar*  TimeToA (ulong time, wxChar* const buf, ulong len)
 //------------------------------------------------------------------------------
 {
   if (len < 5)
     return 0;
 
   buf [len] = 0;
-  buf [--len] = (char) (time % 10 + '0');   time /= 10;
-  buf [--len] = (char) (time % 10 + '0');   time /= 10;
-  buf [--len] = (char) (time % 10 + '0');   time /= 10;
-  buf [--len] = '.';
-  buf [--len] = (char) (time % 10 + '0');   time /= 10;
+  buf [--len] = (wxChar) (time % 10 + wxT('0'));   time /= 10;
+  buf [--len] = (wxChar) (time % 10 + wxT('0'));   time /= 10;
+  buf [--len] = (wxChar) (time % 10 + wxT('0'));   time /= 10;
+  buf [--len] = wxT('.');
+  buf [--len] = (wxChar) (time % 10 + wxT('0'));   time /= 10;
 
   for (; time; time /= 10)
-    buf [--len] = (char) (time % 10 + '0');
+    buf [--len] = (wxChar) (time % 10 + wxT('0'));
 
   while (len > 0)
-    buf [--len] = ' ';
+    buf [--len] = wxT(' ');
 
   return  buf;
 }
 
 //******************************************************************************
-Perf::Perf (const string& fname)
+Perf::Perf (const wxString& fname)
 //------------------------------------------------------------------------------
 {
   func_nr   = functions.size();
@@ -131,15 +133,16 @@ Perf::~Perf()
   else
   {
     // Ausgabe
-    ofstream  out ("perfana.txt");
+    wxFileOutputStream outFile(wxT("perfana.txt"));
+    wxTextOutputStream out( outFile );
 
-    const string  title_name       = "name";
-    const string  title_percent    = "%";
-    const string  title_total      = "total/ms";
-    const string  title_self       = "self/ms";
-    const string  title_num_calls  = "calls";
-    const string  title_self_aver  = "self/call";
-    const string  title_total_aver = "total/call";
+    const wxString  title_name       = wxT("name");
+    const wxString  title_percent    = wxT("%");
+    const wxString  title_total      = wxT("total/ms");
+    const wxString  title_self       = wxT("self/ms");
+    const wxString  title_num_calls  = wxT("calls");
+    const wxString  title_self_aver  = wxT("self/call");
+    const wxString  title_total_aver = wxT("total/call");
     ulong         max_name_len     = title_name.length();
     ulong         max_percent      = max ((ulong)title_percent.length(), (ulong)4U);
     ulong         max_total        = title_total.length();
@@ -148,8 +151,9 @@ Perf::~Perf()
     ulong         max_self_aver    = title_self_aver.length();
     ulong         max_total_aver   = title_total_aver.length();
     ulong         total_time;
-    set<string>    name_set;
-    char           buf[40];
+    set<wxString>    name_set;
+    unsigned short bufSize = 40;
+    wxChar           buf[bufSize];
 
     sort (functions.begin(), functions.end(), PerfFuncCmp());
 
@@ -176,49 +180,59 @@ Perf::~Perf()
 
       ulong  set_size = name_set.size();
       name_set.insert (functions[i].name);
-      if (set_size == name_set.size())
-        cerr << "'" << functions[i].name << "' ist doppelt" << endl;
+      if (set_size == name_set.size()) {
+        #ifdef wxUSE_UNICODE
+          wcerr << wxT("'") << functions[i].name << wxT("' ist doppelt") << endl;
+        #else
+          cerr << wxT("'") << functions[i].name << wxT("' ist doppelt") << endl;
+        #endif // wxUSE_UNICODE
+      }
     }
     total_time = max_total;
 
     // max -> len
-    sprintf (buf, "%lu", max_num_calls);
+    #ifdef wxUSE_UNICODE
+      swprintf (buf, bufSize, wxT("%lu"), max_num_calls);
+    #else
+      sprintf (buf, wxT("%lu"), max_num_calls);
+    #endif // wxUSE_UNICODE
+    
     max_total      = max (TimeStrLen (max_total), (ulong) title_total.length());
     max_self       = max (TimeStrLen (max_self ), (ulong) title_self.length());
-    max_num_calls  = max (strlen (buf), title_num_calls.length());
+    max_num_calls  = max ((size_t) bufSize, (size_t) title_num_calls.length());
     max_self_aver  = max (TimeStrLen (max_self_aver ),
                           (ulong) title_self_aver.length());
     max_total_aver = max (TimeStrLen (max_total_aver),
                           (ulong) title_total_aver.length());
 
     // Title
-    out << '\n'
-        << title_name       << string (max_name_len   - title_name.length()       + 2, ' ')
-        << title_percent    << string (max_percent    - title_percent.length()    + 2, ' ')
-        << title_total      << string (max_total      - title_total.length()      + 2, ' ')
-        << title_self       << string (max_self       - title_self.length()       + 2, ' ')
-        << title_num_calls  << string (max_num_calls  - title_num_calls.length()  + 2, ' ')
-        << title_self_aver  << string (max_self_aver  - title_self_aver.length()  + 2, ' ')
-        << title_total_aver << string (max_total_aver - title_total_aver.length() + 2, ' ')
-        << '\n';
+    out << wxT('\n')
+        << title_name       << wxString (max_name_len   - title_name.length()       + 2, wxT(' '))
+        << title_percent    << wxString (max_percent    - title_percent.length()    + 2, wxT(' '))
+        << title_total      << wxString (max_total      - title_total.length()      + 2, wxT(' '))
+        << title_self       << wxString (max_self       - title_self.length()       + 2, wxT(' '))
+        << title_num_calls  << wxString (max_num_calls  - title_num_calls.length()  + 2, wxT(' '))
+        << title_self_aver  << wxString (max_self_aver  - title_self_aver.length()  + 2, wxT(' '))
+        << title_total_aver << wxString (max_total_aver - title_total_aver.length() + 2, wxT(' '))
+        << wxT('\n');
 
     // Rest
     { // visual studio
     for (unsigned i = 0; i < functions.size(); i++)
     {
       out << functions[i].name
-          << string (max_name_len - functions[i].name.length() + 2, ' ');
-      out << setw (2) << 100 * functions[i].time_self / total_time << '.'
-          << 1000 * functions[i].time_self / total_time % 10 << "  ";
-      out << TimeToA (functions[i].time_total, buf, max_total) << "  ";
-      out << TimeToA (functions[i].time_self, buf, max_self) << "  ";
-      out << setw (max_num_calls) << functions[i].num_calls << "  ";
+          << wxString (max_name_len - functions[i].name.length() + 2, wxT(' '));
+      out << (wxUint32) (100 * functions[i].time_self / total_time ) << wxT('.')// out << setw (2) << 100 * functions[i].time_self / total_time << '.'
+          << (wxUint32) (1000 * functions[i].time_self / total_time % 10) << wxT("  ");
+      out << TimeToA (functions[i].time_total, buf, max_total) << wxT("  ");
+      out << TimeToA (functions[i].time_self, buf, max_self) << wxT("  ");
+      out << functions[i].num_calls << wxT("  ");// out << setw (max_num_calls) << functions[i].num_calls << "  ";
       out << TimeToA (functions[i].num_calls == 0 ?
                             0 : functions[i].time_self / functions[i].num_calls,
-                      buf, max_self_aver) << "  ";
+                      buf, max_self_aver) << wxT("  ");
       out << TimeToA (functions[i].num_calls == 0 ?
                            0 : functions[i].time_total / functions[i].num_calls,
-                      buf, max_total_aver) << '\n';
+                      buf, max_total_aver) << wxT('\n');
     }
     } // visual studio
 

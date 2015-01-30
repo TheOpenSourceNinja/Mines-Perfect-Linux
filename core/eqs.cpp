@@ -19,6 +19,8 @@
 
 #include <iterator>
 #include <iomanip>
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
 
 #ifdef VISUAL_CPP
   #include <minmax.h> // visual studio
@@ -26,9 +28,7 @@
 
 using namespace std;
 
-#ifdef LINUX
-  #include "linux-compatibility.h"
-#endif
+#include "linux-compatibility.h"
 
 #include "eqs.h"
 #include "api.h"
@@ -79,7 +79,7 @@ bool Eq::init (void) // nur dyn.  (ok)
 Eqs::Eqs (const vector<Cell>& cells, bool (Cell::* isVar)(void) const)   // (in Erweiterung)
 //------------------------------------------------------------------------------
 {
-  PERF_ANA ("Eqs::Eqs");
+  PERF_ANA (wxT("Eqs::Eqs"));
 
   vector<Eq*>  k_to_b (cells.size(), 0); // Zelle -> Var
 
@@ -216,74 +216,75 @@ Eqs::~Eqs() // (ok)
 void Eqs::printStat (void) const // (ok)
 //------------------------------------------------------------------------------
 {
-  ofstream  out ("eqs.txt");
+  wxFileOutputStream outFile( wxT("eqs.txt") );
+  wxTextOutputStream out( outFile );
 
   // x
   for_all_vars (pxi, x)
   {
     Var*  xi = *pxi;
 
-    out << "x" << xi->id << ": k=";
+    out << wxT("x") << xi->id << wxT(": k=");
     for_all (CellNrCIter, k, xi->cells)
-      out << *k << ",";
-    out << " ";
+      out << *k << wxT(",");
+    out << wxT(" ");
 
-    out << "[" << xi->val_min << "-" << xi->val_max << "], ";
+    out << wxT("[") << xi->val_min << wxT("-") << xi->val_max << wxT("], ");
 
-    out << "b=";
+    out << wxT("b=");
     for_all_eqs (bj, xi->b)
-      out << (*bj)->id << ",";
-    out << " ";
+      out << (*bj)->id << wxT(",");
+    out << wxT(" ");
 
-    out << "x=";
+    out << wxT("x=");
     for_all_vars (xi2, xi->x)
-      out << (*xi2)->id << ",";
+      out << (*xi2)->id << wxT(",");
 
-    out << "\n";
+    out << wxT("\n");
   }
-  out << "\n";
+  out << wxT("\n");
 
   // b
   for_all_eqs (pbj, b)
   {
     Eq*  bj = *pbj;
 
-    out << "b" << bj->id << ": k=" << bj->cell << ", ";
-    out << "val=" << bj->val << ", ";
+    out << wxT("b") << bj->id << wxT(": k=") << bj->cell << wxT(", ");
+    out << wxT("val=") << bj->val << wxT(", ");
 
-    out << "x=";
+    out << wxT("x=");
     for_all_vars (xi, bj->x)
-      out << (*xi)->id << ",";
-    out << " ";
+      out << (*xi)->id << wxT(",");
+    out << wxT(" ");
 
-    out << "b=";
+    out << wxT("b=");
     for_all_eqs (bj2, bj->b)
-      out << (*bj2)->id << ",";
-    out << "\n";
+      out << (*bj2)->id << wxT(",");
+    out << wxT("\n");
   }
-  out << "\n";
+  out << wxT("\n");
 
   // groups
   for_all_groups (pgr, groups)
   {
     VarGroup*  gr = *pgr;
 
-    out << "g" << gr->id;
+    out << wxT("g") << gr->id;
 
-    out << ": childs=";
-    if (gr->child1 == 0)  out << "-";
+    out << wxT(": childs=");
+    if (gr->child1 == 0)  out << wxT("-");
     else                  out << gr->child1->id;
 
-    out << ",";
-    if (gr->child2 == 0)  out << "-";
+    out << wxT(",");
+    if (gr->child2 == 0)  out << wxT("-");
     else                  out << gr->child2->id;
 
-    out << ", x=";
+    out << wxT(", x=");
     for_all_vars (xi, gr->x)
-      out << (*xi)->id << ",";
-    out << "\n";
+      out << (*xi)->id << wxT(",");
+    out << wxT("\n");
   }
-  out << "\n\n";
+  out << wxT("\n\n");
 
   // board
   int   board_height = 8;
@@ -308,21 +309,21 @@ void Eqs::printStat (void) const // (ok)
         cell_g[(*xi)->cells[k]] = (groups.size() == 0) ? 0 : (*xi)->group->id;
   } // visual studio
 
-  out << "b:";
+  out << wxT("b:");
   for (int pos_y = 0; pos_y < board_height; pos_y++)
-    out << "   ";
+    out << wxT("   ");
 
   { // visual studio
-  out << "x:";
+  out << wxT("x:");
   for (int pos_y = 0; pos_y < board_height; pos_y++)
-    out << "   ";
+    out << wxT("   ");
   } // visual studio
 
   { // visual studio
-  out << "g:";
+  out << wxT("g:");
   for (int pos_y = 0; pos_y < board_height; pos_y++)
-    out << "   ";
-  out << "\n";
+    out << wxT("   ");
+  out << wxT("\n");
   } // visual studio
 
   { // visual studio
@@ -332,20 +333,20 @@ void Eqs::printStat (void) const // (ok)
     {
       CellNr k = pos_y * board_height + pos_x;
 
-      if (cell_b[k] == -1)  out << setw (3) << "-";
-      else                  out << setw (3) << cell_b [k];
+      if (cell_b[k] == -1)  out << wxT("-");// out << setw (3) << wxT("-");
+      else                  out << cell_b [k];// out << setw (3) << cell_b [k];
     }
-    out << "  ";
+    out << wxT("  ");
 
     { // visual studio
       for (int pos_x = 0; pos_x < board_width; pos_x++)
       {
         CellNr k = pos_y * board_height + pos_x;
 
-        if (cell_x[k] == -1)  out << setw (3) << "-";
-        else                  out << setw (3) << cell_x [k];
+        if (cell_x[k] == -1)  out << wxT("-");// out << setw (3) << wxT("-");
+        else                  out << cell_x [k];// out << setw (3) << cell_x [k];
       }
-      out << "  ";
+      out << wxT("  ");
     } // visual studio
 
     { // visual studio
@@ -353,52 +354,55 @@ void Eqs::printStat (void) const // (ok)
       {
         CellNr k = pos_y * board_height + pos_x;
 
-        if (cell_g[k] == -1)  out << setw (3) << "-";
-        else                  out << setw (3) << cell_g [k];
+        if (cell_g[k] == -1)  out << wxT("-");// out << setw (3) << wxT("-");
+        else                  out << cell_g [k];// out << setw (3) << cell_g [k];
       }
-      out << "\n";
+      out << wxT("\n");
     } // visual studio
   }
-  out << "\n";
+  out << wxT("\n");
   } // visual studio
 }
 
 //******************************************************************************
-void Eqs::logVal (char res) const // (ok)
+void Eqs::logVal (wxChar res) const // (ok)
 //------------------------------------------------------------------------------
 {
   if (res == 0)
   {
-    ofstream  out ("val.txt"); 
+  	wxFileOutputStream outFile( wxT("val.txt") );
+  	wxTextOutputStream out( outFile );
 
     // x->group->id
     for_all_vars (xi, x)
-      out << setw (2) << (*xi)->group->id << " ";
-    out << "\n";
+      out << (*xi)->group->id << wxT(" ");// out << setw (2) << (*xi)->group->id << wxT(" "); //Not sure if setw() is needed but it causes trouble when using a wxTextOutputStream rather than a standard ostream
+    out << wxT("\n");
 
     // x->id
     { // visual studio
       for_all_vars (xi, x)
-        out << setw (2) << (*xi)->id << " ";
-      out << "\n";
+        out << (*xi)->id << wxT(" ");// out << setw (2) << (*xi)->id << wxT(" "); //Not sure if setw() is needed but it causes trouble when using a wxTextOutputStream rather than a standard ostream
+      out << wxT("\n");
     } // visual studio
   }
   else
   {
 //    ofstream  out ("val.txt", ios_base::out | ios_base::app);
-    ofstream  out ("val.txt", ios::out | ios::app);
+    wxFile file( wxT( "val.txt" ), wxFile::write_append );
+    wxFileOutputStream outFile( file );
+    wxTextOutputStream out( outFile );
 
     // x->val
     for_all_vars (xi, x)
     {
       if ((*xi)->val == -1)
-        out << " . ";
+        out << wxT(" . ");
       else if ((*xi)->manual)
-        out << setw (2) << (*xi)->val << "*";
+        out << (*xi)->val << wxT("*");// out << setw (2) << (*xi)->val << wxT("*");
       else
-        out << setw (2) << (*xi)->val << " ";
+        out << (*xi)->val << wxT(" ");// out << setw (2) << (*xi)->val << wxT(" ");
     }
-    out << "  " << res << "\n";
+    out << wxT("  ") << res << wxT("\n");
   }
 }
 
@@ -591,7 +595,7 @@ void Eqs::buildGroups (void) // (ok)
 //------------------------------------------------------------------------------
 {
   //*** Baue Gruppen auf ***
-  PERF_ANA ("Eqs::buildGroups");
+  PERF_ANA (wxT("Eqs::buildGroups"));
 
   if (groups.size() > 0)
     return;
@@ -697,7 +701,7 @@ void Eqs::init (const int pass) // nur dyn.  (ok)
   for_all_groups (gr, groups)
     (*gr)->init (pass);
 
-  groups[0]->cur_sums = &groups[0]->comb_sums[""];
+  groups[0]->cur_sums = &groups[0]->comb_sums[wxT("")];
 
   // x->sols.resize()
   int  max_deep = (*max_element (groups.begin(), groups.end(),
@@ -719,7 +723,7 @@ Found Eqs::findMoves1 (Moves& moves, CellNrs* const hints) // Stage 1  (Erweiter
 //   hints != 0 -> Nur hints setzen, (moves bleibt leer)? - geflaggten Felder?
 //   hints == 0 -> moves enthaelt hints? - geflaggte Felder?
 {
-  PERF_ANA ("Eqs::findMoves1");
+  PERF_ANA (wxT("Eqs::findMoves1"));
 
   // init
   moves.clear();
@@ -869,7 +873,7 @@ Found Eqs::findMoves2 (Moves& moves, CellNrs* const hints) // Stage 2 (Erweiteru
 //      ? ? ?         ? ? ?           4 3
 //      x 2           x 2 ?           ? ? ?
 {
-  PERF_ANA ("Eqs::findMoves2");
+  PERF_ANA (wxT("Eqs::findMoves2"));
 
   bool  contra2_exist = false; // Widerspruch gefunden (bei Stage 2)
 
@@ -1072,7 +1076,7 @@ Found Eqs::findMoves3 (Moves& moves, int max_time,
   if (max_time == 0)
     throw OutOfTime();
 
-  PERF_ANA ("Eqs::findMoves3");
+  PERF_ANA (wxT("Eqs::findMoves3"));
 
   // clock0, diff_clock
   clock0 = clock();
@@ -1155,7 +1159,7 @@ Found Eqs::findMoves3 (Moves& moves, int max_time,
 
     // ...Widerspruch?
     ASSERT (groups[0]->solve());
-    ASSERT (groups[0]->comb_sums[""].size() != 0);
+    ASSERT (groups[0]->comb_sums[wxT("")].size() != 0);
 
     solve_stage = 3;
   }
@@ -1165,10 +1169,10 @@ Found Eqs::findMoves3 (Moves& moves, int max_time,
   for_all_vars (xi, x)
     num_var_cells += (*xi)->cells.size();
 
-  int  sol_sum_smallest = *min_element (groups[0]->comb_sums[""].begin(),
-                                        groups[0]->comb_sums[""].end());
-  int  sol_sum_largest  = *max_element (groups[0]->comb_sums[""].begin(),
-                                        groups[0]->comb_sums[""].end());
+  int  sol_sum_smallest = *min_element (groups[0]->comb_sums[wxT("")].begin(),
+                                        groups[0]->comb_sums[wxT("")].end());
+  int  sol_sum_largest  = *max_element (groups[0]->comb_sums[wxT("")].begin(),
+                                        groups[0]->comb_sums[wxT("")].end());
   int  sol_sum_min      = max (0, num_mines_remain - num_vars_inside);
   int  sol_sum_max      = min (num_var_cells, num_mines_remain);
 
@@ -1193,7 +1197,7 @@ Found Eqs::findMoves3 (Moves& moves, int max_time,
 
       return FOUND_MOVE;
     }
-    ASSERT (groups[0]->comb_sums[""].size() != 0);
+    ASSERT (groups[0]->comb_sums[wxT("")].size() != 0);
 
     solve_stage = 4;
   }
@@ -1253,7 +1257,7 @@ bool Eqs::findOneSolution (const vector<Cell>& cells, CellNrs& to_toggle,
 // out: to_toggle  alle zu aendernden Zellen
 // out: moves      gefundene Zuege
 {
-  PERF_ANA ("Eqs::findOneSolution");
+  PERF_ANA (wxT("Eqs::findOneSolution"));
   
   if (max_time == 0)
     throw OutOfTime();

@@ -595,7 +595,13 @@ void MinesPerfect::DlgNewRecord (Options* options, int num_msecs, bool certified
 void MinesPerfect::WinSetSize (const MinesPerfect::Point& sz)
 //------------------------------------------------------------------------------
 {
+  //workaround for what seems to be a bug in the wxWidgets library
+  wxSize minSize(sz.x, sz.y);
+  main_win->SetMinSize( minSize );
+  //end workaround
+  
   main_win->SetClientSize (sz.x, sz.y);
+  
   main_win->Show(TRUE);
 }
 
@@ -659,7 +665,7 @@ void MinesPerfect::FindFiles (vector<wxString>& files, const wxString& pattern)
   // (aber erst spaeter), falls das Verzeichnis nicht existiert.
 
   // Ende, falls Verzeichnis nicht exist.
-  unsigned i = pattern.rfind('/');
+  unsigned i = pattern.rfind(wxT('/'));
 
   if (i != wxString::npos
   &&  !wxDir::Exists (pattern.substr(0, i).c_str()))

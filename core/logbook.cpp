@@ -564,27 +564,27 @@ bool Logbook::invalidateLast()
 }
 
 //******************************************************************************
-char Logbook::Int6ToChar (int val) const
+wxChar Logbook::Int6ToChar (int val) const
 //------------------------------------------------------------------------------
 {
-  if      (val <  10)  return '0' + val;
-  else if (val <  36)  return 'A' + val - 10;
-  else if (val <  62)  return 'a' + val - 36;
-  else if (val == 62)  return '-';
-  else if (val == 63)  return '_';
+  if      (val <  10)  return wxT('0') + val;
+  else if (val <  36)  return wxT('A') + val - 10;
+  else if (val <  62)  return wxT('a') + val - 36;
+  else if (val == 62)  return wxT('-');
+  else if (val == 63)  return wxT('_');
 
   throw LogException (wxT("Logbook::Int6ToChar: num_bits too large."));
 }
 
 //******************************************************************************
-int Logbook::CharToInt6 (char ch) const
+int Logbook::CharToInt6 (wxChar ch) const
 //------------------------------------------------------------------------------
 {
-  if      ('0' <= ch && ch <= '9')  return ch - '0';
-  else if ('A' <= ch && ch <= 'Z')  return ch - 'A' + 10;
-  else if ('a' <= ch && ch <= 'z')  return ch - 'a' + 36;
-  else if (ch == '-')               return 62;
-  else if (ch == '_')               return 63;
+  if      (wxT('0') <= ch && ch <= wxT('9'))  return ch - wxT('0');
+  else if (wxT('A') <= ch && ch <= wxT('Z'))  return ch - wxT('A') + 10;
+  else if (wxT('a') <= ch && ch <= wxT('z'))  return ch - wxT('a') + 36;
+  else if (ch == wxT('-'))               return 62;
+  else if (ch == wxT('_'))               return 63;
 
   throw LogException (wxT("Logbook::CharToInt6: num_bits too large."));
 }
@@ -722,7 +722,7 @@ void Logbook::importStr (const wxString& text)
 
   for (p1 = p2 = 0; p2 != wxString::npos; p1 = p2 + 1)
   {
-    p2 = text.find (',', p1);
+    p2 = text.find (wxT(','), p1);
 
     parts.push_back (text.substr (p1, p2 - p1));
   }

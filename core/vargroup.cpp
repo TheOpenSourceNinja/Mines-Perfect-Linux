@@ -33,6 +33,9 @@ namespace MinesPerfect
   #include <math.h>
 //#endif
 
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
+
 using namespace std;
 
 #include "vargroup.h"
@@ -106,12 +109,13 @@ void Var::untie (void) // (ok)
 void VarGroup::printDyn (void) // (ok)
 //------------------------------------------------------------------------------
 {
-  ofstream     out ("group.txt");
+  wxFileOutputStream outFile( wxT("group.txt") );
+  wxTextOutputStream out(outFile);
 
   // group->id
   vector<VarGroup*>  call_stack;
 
-  out << "cur.group-path: ";
+  out << wxT("cur.group-path: ");
 
   for (VarGroup* g = this; g != 0; g = g->parent)
     call_stack.push_back (g);
@@ -119,71 +123,71 @@ void VarGroup::printDyn (void) // (ok)
   for (unsigned i = call_stack.size(); i > 0; i--)
   {
     VarGroup*  g    = call_stack[i-1];
-    string   key  = g->calcCombkey();
-    string   gval = key.substr (key.size() - g->x.size());
+    wxString   key  = g->calcCombkey();
+    wxString   gval = key.substr (key.size() - g->x.size());
 
-    out << g->id << " (" << gval << ")";
+    out << g->id << wxT(" (") << gval << wxT(")");
     if (i > 1)
-      out << " -> ";
+      out << wxT(" -> ");
   }
-  out << "\n\n";
+  out << wxT("\n\n");
 
   // x->group->id
-  out << "x->group->id  " << setfill ('-');
+  out << wxT("x->group->id  ");// << setfill (wxT('-'));
   for_all_vars (xi, eqs->x)
   {
-    out << setw ((*xi)->val_max - (*xi)->val_min + 2)
-        << (*xi)->group->id << "-";
+    out << (*xi)->group->id << wxT("-");// << setw ((*xi)->val_max - (*xi)->val_min + 2)
+        // << (*xi)->group->id << wxT("-");
   }
-  out << "\n" << setfill (' ');
+  out << wxT("\n");// << setfill (wxT(' '));
 
   // x->sols
   if (eqs->x.size() > 0)
   {
     for (unsigned d = 0; d < eqs->x[0]->sols.size(); d++)
     {
-      out << "x->sols[" << d << "] = { ";
+      out << wxT("x->sols[") << d << wxT("] = { ");
       for_all_vars (xi, eqs->x)
       {
           for (unsigned s = 0; s < (*xi)->sols[d].size(); s++)
             out << (*xi)->sols[d][s];
       
-        out << setw ((*xi)->val_max - (*xi)->val_min + 1 - (*xi)->sols[d].size())
-            << "";
+        out << wxT("");// setw ((*xi)->val_max - (*xi)->val_min + 1 - (*xi)->sols[d].size())
+            //<< wxT("");
         if (xi + 1 != eqs->x.end())
-          out << ", ";
+          out << wxT(", ");
       }
-      out << " }\n";
+      out << wxT(" }\n");
     }
   }
 
   // x->val
-  out << "x->val     = { ";
+  out << wxT("x->val     = { ");
 
   { // visual studio
 	  for_all_vars (xi, eqs->x)
 	  {
 	  if ((*xi)->val == -1)
-	    out << setw ((*xi)->val_max - (*xi)->val_min + 1) << "-";
+	    out << wxT("-");// << setw ((*xi)->val_max - (*xi)->val_min + 1) << wxT("-");
 	  else
-	    out << setw ((*xi)->val_max - (*xi)->val_min + 1) << (*xi)->val;
+	    out << (*xi)->val;// setw ((*xi)->val_max - (*xi)->val_min + 1) << (*xi)->val;
 	  if (xi + 1 != eqs->x.end())
-	    out << ", ";
+	    out << wxT(", ");
 	  }
   } // visual studio
 
-  out << " }\n";
+  out << wxT(" }\n");
 
   // x->id
-  out << "x->id         " << setfill ('-');
+  out << wxT("x->id         ");// << setfill (wxT('-'));
 
   { // visual studio
     for_all_vars (xi, eqs->x)
-      out << setw ((*xi)->val_max - (*xi)->val_min + 2)
-          << (*xi)->id << "-";
+      out << (*xi)->id << wxT("-");// << setw ((*xi)->val_max - (*xi)->val_min + 2)
+          //<< (*xi)->id << wxT("-");
   } // visual studio
 
-  out << "\n\n" << setfill (' ');
+  out << wxT("\n\n");// << setfill (wxT(' '));
 
   // group->sol_sums
   for_all_groups (gr, eqs->groups)
@@ -191,97 +195,97 @@ void VarGroup::printDyn (void) // (ok)
     for (CombSums::const_iterator ci =  (*gr)->comb_sums.begin();
                                   ci != (*gr)->comb_sums.end(); ci++)
     {  
-      out << "group[" << (*gr)->id << "].comb_sums[" << (*ci).first << "] = { ";
+      out << wxT("group[") << (*gr)->id << wxT("].comb_sums[") << (*ci).first << wxT("] = { ");
       for_all_sums (s, (*ci).second)
       {
         out << *s;
         if (s + 1 != (*ci).second.end())
-          out << ", ";
+          out << wxT(", ");
       }
-      out << " }\n";
+      out << wxT(" }\n");
     }
   }
-  out << "\n\n";
+  out << wxT("\n\n");
 
   // b->num_id
-  out << "b->id                 =   ";
+  out << wxT("b->id                 =   ");
   for_all_eqs (bj, eqs->b)
   {
     out << (*bj)->id;
     if (bj + 1 != eqs->b.end())
-      out << ", ";
+      out << wxT(", ");
   }
-  out << "\n";
+  out << wxT("\n");
 
   // b->num_free_vars
-  out << "b->num_free_vars      = { ";
+  out << wxT("b->num_free_vars      = { ");
 
   { // visual studio
     for_all_eqs (bj, eqs->b)
     {
       out << (*bj)->num_free_vars;
       if (bj + 1 != eqs->b.end())
-        out << ", ";
+        out << wxT(", ");
     }
   } // visual studio
 
-  out << " }\n";
+  out << wxT(" }\n");
 
   // b->num_free_cells
-  out << "b->num_free_cells     = { ";
+  out << wxT("b->num_free_cells     = { ");
 
   { // visual studio
     for_all_eqs (bj, eqs->b)
 	  {
       out << (*bj)->num_free_cells;
       if (bj + 1 != eqs->b.end())
-        out << ", ";
+        out << wxT(", ");
     }
   } // visual studio
 
-  out << " }\n\n";
+  out << wxT(" }\n\n");
 
   // group->id               
-  out << "group->id             =   ";
+  out << wxT("group->id             =   ");
 
   { // visual studio
     for_all_groups (gr, eqs->groups)
     {
       out << (*gr)->id;
       if (gr + 1 != eqs->groups.end())
-        out << ", ";
+        out << wxT(", ");
     }
   } // visual studio
 
-  out << "\n";
+  out << wxT("\n");
 
   // group->num_free_vars
-  out << "group->num_free_vars  = { ";
+  out << wxT("group->num_free_vars  = { ");
 
   { // visual studio
     for_all_groups (gr, eqs->groups)
     {
       out << (*gr)->num_free_vars;
       if (gr + 1 != eqs->groups.end())
-        out << ", ";
+        out << wxT(", ");
     }
   } // visual studio
 
-  out << " }\n";
+  out << wxT(" }\n");
 
   // group->num_free_cells
-  out << "group->num_free_cells = { ";
+  out << wxT("group->num_free_cells = { ");
 
   { // visual studio
     for_all_groups (gr, eqs->groups)
     {
       out << (*gr)->num_free_cells;
       if (gr + 1 != eqs->groups.end())
-        out << ", ";
+        out << wxT(", ");
     }
   } // visual studio
 
-  out << " }\n\n";
+  out << wxT(" }\n\n");
 }
 
 //******************************************************************************
@@ -603,7 +607,7 @@ Conclusion VarGroup::conclude (vector<Var*>& ties) // (ok)
 // 3. Liste mit allen betroffenen Vars bilden
 // 4. neue Liste der Eq's = Nachbarn der oben genanntem Vars
 {
-  PERF_ANA ("VarGroup::conclude");
+  PERF_ANA (wxT("VarGroup::conclude"));
 
   if (eqs->conclusion != CONCL_NOT_TRIED)
   {
@@ -676,13 +680,13 @@ Conclusion VarGroup::conclude (vector<Var*>& ties) // (ok)
 }
 
 //******************************************************************************
-string VarGroup::calcCombkey (void) // (ok)
+wxString VarGroup::calcCombkey (void) // (ok)
 //------------------------------------------------------------------------------
 {
-  string  key = (parent == 0) ? string("")
+  wxString  key = (parent == 0) ? wxString(wxT(""))
                               : parent->calcCombkey();
   for_all_vars (xi, x)
-    key += (char) ('0' + (*xi)->val);
+    key += (wxChar) (wxT('0') + (*xi)->val);
 
   return  key;
 }
@@ -746,7 +750,7 @@ bool VarGroup::noteSol (SolSums* permit_sums) // (ok)
     }
     else
     {
-      string  comb_key = calcCombkey();
+      wxString  comb_key = calcCombkey();
 
       SolSums  temp_sums = *child1->cur_sums;
       temp_sums.add (sum);
@@ -801,7 +805,7 @@ bool VarGroup::noteSol (SolSums* permit_sums) // (ok)
 bool VarGroup::solve (SolSums* permit_sums) // (ok)
 //------------------------------------------------------------------------------
 {
-  PERF_ANA ("VarGroup::solve");
+  PERF_ANA (wxT("VarGroup::solve"));
 
   if (eqs->diff_clock >= 0 && clock() - eqs->clock0 > eqs->diff_clock)
     throw OutOfTime();
@@ -819,7 +823,7 @@ bool VarGroup::solve (SolSums* permit_sums) // (ok)
   {
     // Trace
     if (Glob::trace_level >= 2)
-      eqs->logVal (' ');
+      eqs->logVal (wxT(' '));
 
     // freie Var. suche
     VarCIter  pxi = find_if (x.begin(), x.end(), mem_eq (&Var::val, -1));
@@ -852,15 +856,15 @@ bool VarGroup::solve (SolSums* permit_sums) // (ok)
 
       // Trace
       if (Glob::trace_level >= 2)
-        eqs->logVal ((char) ('0' + id));
+        eqs->logVal ((wxChar) (wxT('0') + id));
     }
     else // mit childs
     {
       // Trace
       if (Glob::trace_level >= 2)
-        eqs->logVal (' ');
+        eqs->logVal (wxT(' '));
 
-      string  comb_key = calcCombkey();
+      wxString  comb_key = calcCombkey();
 
       child1->cur_sums = &child1->comb_sums[comb_key];
       child2->cur_sums = &child2->comb_sums[comb_key];
@@ -924,14 +928,14 @@ bool VarGroup::solve (SolSums* permit_sums) // (ok)
 
       // Trace
       if (Glob::trace_level >= 2)
-        eqs->logVal ((char)('0' + id));
+        eqs->logVal ((wxChar)(wxT('0') + id));
     }
   }
   else // Widerspruch
   {
     // Trace
     if (Glob::trace_level >= 2)
-      eqs->logVal ('-');
+      eqs->logVal (wxT('-'));
   }
 
   if (Glob::trace_level >= 2)

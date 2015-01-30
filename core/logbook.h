@@ -152,8 +152,8 @@ class Logbook
                               // ! Zeigt immer auf einen gueltigen Log oder auf
                               // ! den ersten
     void    writeOptions (const wxString& fname) const;
-    char    Int6ToChar (int num) const;
-    int     CharToInt6 (char ch) const;
+    wxChar    Int6ToChar (int num) const;
+    int     CharToInt6 (wxChar ch) const;
 
   public:
 

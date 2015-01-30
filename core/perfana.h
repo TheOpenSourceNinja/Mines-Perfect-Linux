@@ -42,13 +42,13 @@ namespace Glob
 struct PerfFunc
 //------------------------------------------------------------------------------
 {
-  string  name;
+  wxString  name;
   ulong   time_total;
   ulong   time_self;
   int     num_calls;
   int     rec_level; 
 
-  PerfFunc (const string& n) : name(n), time_total(0), time_self(0),
+  PerfFunc (const wxString& n) : name(n), time_total(0), time_self(0),
                                 num_calls(0), rec_level(0) {}
   PerfFunc () : name(), time_total(0), time_self(0), num_calls (0),
                  rec_level(0) {}
@@ -73,7 +73,7 @@ private:
   bool      is_static;
 
 public:
-  Perf (const string&  fname);
+  Perf (const wxString&  fname);
   Perf (const int      fnr);
   ~Perf();
 
