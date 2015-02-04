@@ -3,6 +3,8 @@ This is an attempt to port Mines-Perfect (http://mines-perfect.sourceforge.net/)
 
 All contributions are welcome.
 
+Unfortunately porting this to Linux requires that every string support Unicode. Thus every string has been converted to a wxString, so every file - contrary to what is stated in the original readme below - now depends on the wxWidgets library.
+
 # Original Readme
 
             Mines-Perfect - a minesweeper-clone
@@ -45,8 +47,4 @@ You need for build:
 !! You cannot send highscores with a selfcompiled mineperf.exe !!
 
 
-General:
-  homepage:        www.czeppi.de
-  e-mail:          mail@czeppi.de
-  sourceforge.net: search for mines-perfect.
-
+(old contact info removed)
