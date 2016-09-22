@@ -157,7 +157,7 @@ Logbook::Logbook (uint32 ran, const Options& opt)
   is_playing = false;
   play_index = 0;
   cur_index  = 0;
-  clock0     = getTime();
+  clock0     = getTimeMilliseconds();
 
   logs.clear();
 
@@ -319,7 +319,7 @@ void Logbook::startPlaying (void)
 
   play_index = 0;
   is_playing = true;
-  clock0 = getTime(); // Zeit synchronisieren
+  clock0 = getTimeMilliseconds(); // Zeit synchronisieren
 }
 
 //******************************************************************************
@@ -330,7 +330,7 @@ void Logbook::operator>> (Log& log)
   ASSERT (play_index < logs.size());
   ASSERT (play_index < cur_index);
 
-//   logs[play_index].time1 = getTime();  //???
+//   logs[play_index].time1 = getTimeMilliseconds();  //???
 
   log = logs[play_index];
   play_index++;
@@ -341,7 +341,7 @@ void Logbook::operator>> (Log& log)
     log.write (AUTO_LOG_FNAME); // auto_log protokolliert auch das Lesen.
 
   // Zeit synchronisieren
-  clock0 = getTime() - log.time1 * 1000; //clock() - log.time1 * CLOCKS_PER_SEC / 1000;
+  clock0 = getTimeMilliseconds() - log.time1 * 1000; //clock() - log.time1 * CLOCKS_PER_SEC / 1000;
 }
 
 //******************************************************************************
@@ -399,7 +399,7 @@ void Logbook::operator<< (const Log& log)
     }
     else
     {
-      log2.time1 = (getTime() - clock0) / 1000;// (clock() - clock0) * 1000 / CLOCKS_PER_SEC;
+      log2.time1 = (getTimeMilliseconds() - clock0) / 1000;// (clock() - clock0) * 1000 / CLOCKS_PER_SEC;
     }
 
     if (log2.time1 == 0)
@@ -547,7 +547,7 @@ bool Logbook::redo (Log& log)
          && (!logs[cur_index].valid || log.isComputerLog()));
   
   // Zeit synchronisieren
-  clock0 = getTime() - log.time1 * 1000;//clock() - log.time1 * CLOCKS_PER_SEC / 1000;
+  clock0 = getTimeMilliseconds() - log.time1 * 1000;//clock() - log.time1 * CLOCKS_PER_SEC / 1000;
   
   return true;
 }

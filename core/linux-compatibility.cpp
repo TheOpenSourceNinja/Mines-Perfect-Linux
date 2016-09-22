@@ -74,9 +74,14 @@
   }
 #endif
 
+//Returns the time in NANOseconds, not MILLIseconds!
 unsigned long long getTime() {
   timespec t;
   clock_gettime( CLOCK_MONOTONIC, &t );
   unsigned long long result = ( t.tv_sec * 1000000 ) + t.tv_nsec;
   return result;
+}
+
+unsigned long long getTimeMilliseconds() {
+	return getTime() / 1000;
 }

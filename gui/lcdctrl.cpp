@@ -64,8 +64,11 @@ LcdCtrl::LcdCtrl(Ctrl* parent)
 void LcdCtrl::setVal (int val)
 //------------------------------------------------------------------------------
 {
-  if      (val < -99)  val = -99;
-  else if (val > 999)  val = 999;
+	if (val < -99) {
+		val = -99;
+	} else if (val > 999) {
+		val = 999;
+	}
 
   setElem (m_val, val);
 }

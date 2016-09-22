@@ -1079,7 +1079,7 @@ Found Eqs::findMoves3 (Moves& moves, int max_time,
   PERF_ANA (wxT("Eqs::findMoves3"));
 
   // clock0, diff_clock
-  clock0 = getTime();
+  clock0 = getTimeMilliseconds();
   if (max_time < 0) diff_clock = -1;
   else              diff_clock = (clock_t) max_time * CLOCKS_PER_SEC / 1000;
 

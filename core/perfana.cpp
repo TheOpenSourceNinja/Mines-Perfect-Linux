@@ -98,7 +98,7 @@ Perf::Perf (const int fnr)
 {
   func_nr   = fnr;
 
-  clock0    = getTime();
+  clock0    = getTimeMilliseconds();
   ASSERT (clock0 != -1);
 
   is_static = false;
@@ -114,7 +114,7 @@ Perf::~Perf()
   if (is_static || !Glob::perfana_on)
     return;
 
-  unsigned long long   clock1 = getTime();
+  unsigned long long   clock1 = getTimeMilliseconds();
 
   ASSERT (clock0 != -1);
   
